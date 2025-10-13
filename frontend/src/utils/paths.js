@@ -56,7 +56,10 @@ export default {
     return "https://discord.com/invite/6UyHPeGZAC";
   },
   docs: () => {
-    return "https://docs.anythingllm.com";
+    return "https://agtusa.atlassian.net/wiki/spaces/WMS/pages/1608744961/Wet+Monkey+Studios";
+  },
+  website: () => {
+    return "https://agtslots.com";
   },
   chatModes: () => {
     return "https://docs.anythingllm.com/features/chat-modes";

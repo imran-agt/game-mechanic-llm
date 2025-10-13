@@ -51,15 +51,14 @@ export default function Footer() {
         <div className="flex space-x-4">
           <div className="flex w-fit">
             <Link
-              to={paths.github()}
-              target="_blank"
+              to={paths.home()}
               rel="noreferrer"
               className="transition-all duration-300 p-2 rounded-full bg-theme-sidebar-footer-icon hover:bg-theme-sidebar-footer-icon-hover"
-              aria-label="Find us on GitHub"
+              aria-label="Home"
               data-tooltip-id="footer-item"
-              data-tooltip-content="View source code on GitHub"
+              data-tooltip-content="Go to homepage"
             >
-              <GithubLogo
+              <HouseLine
                 weight="fill"
                 className="h-5 w-5"
                 color="var(--theme-sidebar-footer-icon-fill)"
@@ -74,7 +73,7 @@ export default function Footer() {
               className="transition-all duration-300 p-2 rounded-full bg-theme-sidebar-footer-icon hover:bg-theme-sidebar-footer-icon-hover"
               aria-label="Docs"
               data-tooltip-id="footer-item"
-              data-tooltip-content="Open AnythingLLM help docs"
+              data-tooltip-content="Open documentation"
             >
               <BookOpen
                 weight="fill"
@@ -85,15 +84,15 @@ export default function Footer() {
           </div>
           <div className="flex w-fit">
             <Link
-              to={paths.discord()}
+              to={paths.website()}
               target="_blank"
               rel="noreferrer"
               className="transition-all duration-300 p-2 rounded-full bg-theme-sidebar-footer-icon hover:bg-theme-sidebar-footer-icon-hover"
-              aria-label="Join our Discord server"
+              aria-label="Website"
               data-tooltip-id="footer-item"
-              data-tooltip-content="Join the AnythingLLM Discord"
+              data-tooltip-content="Visit our website"
             >
-              <DiscordLogo
+              <Globe
                 weight="fill"
                 className="h-5 w-5"
                 color="var(--theme-sidebar-footer-icon-fill)"
