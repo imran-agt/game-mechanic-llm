@@ -50,7 +50,7 @@ export default {
     },
   },
   github: () => {
-    return "https://github.com/Mintplex-Labs/anything-llm";
+    return "https://agtusa.atlassian.net/wiki/spaces/Unity/pages/992280911/GDK";
   },
   discord: () => {
     return "https://discord.com/invite/6UyHPeGZAC";

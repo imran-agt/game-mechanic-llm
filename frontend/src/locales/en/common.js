@@ -229,12 +229,12 @@ const TRANSLATIONS = {
       title: "Updates & Announcements",
     },
     resources: {
-      title: "Resources",
+      title: "Help",
       links: {
-        docs: "Docs",
-        star: "Star on Github",
+        docs: "GDK Docs",
+        star: "Feedback",
       },
-      keyboardShortcuts: "Keyboard Shortcuts",
+      keyboardShortcuts: "About",
     },
   },
 
@@ -1017,17 +1017,17 @@ const TRANSLATIONS = {
   },
 
   "keyboard-shortcuts": {
-    title: "Keyboard Shortcuts",
+    title: "Game Mechanic",
     shortcuts: {
-      settings: "Open Settings",
+      version: "Version",
       workspaceSettings: "Open Current Workspace Settings",
-      home: "Go to Home",
-      workspaces: "Manage Workspaces",
-      apiKeys: "API Keys Settings",
-      llmPreferences: "LLM Preferences",
-      chatSettings: "Chat Settings",
-      help: "Show keyboard shortcuts help",
-      showLLMSelector: "Show workspace LLM Selector",
+      home: "Vector Database",
+      modelParameter: "Model Parameter",
+      embeddingModel: "Embedding",
+      languageModel: "Language Model",
+      contextWindow: "Context Window",
+      modelSize: "Model Size",
+      modelServer: "Model Server",
     },
   },
   community_hub: {

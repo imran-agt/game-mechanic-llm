@@ -6,8 +6,8 @@ import { TOGGLE_LLM_SELECTOR_EVENT } from "@/components/WorkspaceChat/ChatContai
 export const KEYBOARD_SHORTCUTS_HELP_EVENT = "keyboard-shortcuts-help";
 export const isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
 export const SHORTCUTS = {
-  "⌘ + ,": {
-    translationKey: "settings",
+  "0.1a": {
+    translationKey: "version",
     action: () => {
       window.location.href = paths.settings.interface();
     },
@@ -18,32 +18,32 @@ export const SHORTCUTS = {
       window.location.href = paths.home();
     },
   },
-  "⌘ + I": {
-    translationKey: "workspaces",
+  "30B": {
+    translationKey: "modelParameter",
     action: () => {
       window.location.href = paths.settings.workspaces();
     },
   },
-  "⌘ + K": {
-    translationKey: "apiKeys",
+  "Qwen3-embed-4b": {
+    translationKey: "embeddingModel",
     action: () => {
       window.location.href = paths.settings.apiKeys();
     },
   },
-  "⌘ + L": {
-    translationKey: "llmPreferences",
+  "Qwen3-30b": {
+    translationKey: "languageModel",
     action: () => {
       window.location.href = paths.settings.llmPreference();
     },
   },
-  "⌘ + Shift + C": {
-    translationKey: "chatSettings",
+  "32756": {
+    translationKey: "contextWindow",
     action: () => {
       window.location.href = paths.settings.chat();
     },
   },
-  "⌘ + Shift + ?": {
-    translationKey: "help",
+  "14gb": {
+    translationKey: "modelSize",
     action: () => {
       window.dispatchEvent(
         new CustomEvent(KEYBOARD_SHORTCUTS_HELP_EVENT, {
@@ -52,18 +52,8 @@ export const SHORTCUTS = {
       );
     },
   },
-  F1: {
-    translationKey: "help",
-    action: () => {
-      window.dispatchEvent(
-        new CustomEvent(KEYBOARD_SHORTCUTS_HELP_EVENT, {
-          detail: { show: true },
-        })
-      );
-    },
-  },
-  "⌘ + Shift + L": {
-    translationKey: "showLLMSelector",
+  "3001": {
+    translationKey: "modelServer",
     action: () => {
       window.dispatchEvent(new Event(TOGGLE_LLM_SELECTOR_EVENT));
     },
