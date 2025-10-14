@@ -77,6 +77,7 @@ export default function WorkspaceChat({ loading, workspace }) {
   }
 
   setEventDelegatorForCodeSnippets();
+  setEventDelegatorForOpenInEditor(); // *** NEW: Add event handler for "Open in Editor" ***
   return (
     <TTSProvider>
       <DnDFileUploaderProvider workspace={workspace} threadSlug={threadSlug}>
@@ -111,6 +112,92 @@ function copyCodeSnippet(uuid) {
   }, 2500);
 }
 
+// *** NEW FUNCTION: Sends code snippet to Unity editor via UWB JavaScript interop ***
+function openCodeInEditor(uuid, lang) {
+  // Find the pre element containing the code
+  const preElement = document.querySelector(`pre[data-code="${uuid}"]`);
+  if (!preElement) {
+    console.error(
+      `[OpenInEditor] Could not find code block with UUID: ${uuid}`
+    );
+    return false;
+  }
+
+  // Get the text content of the code block
+  const codeContent = preElement.innerText;
+  if (!codeContent) {
+    console.error(`[OpenInEditor] Code block is empty`);
+    return false;
+  }
+
+  // Find the button that was clicked
+  const button = document.querySelector(
+    `[data-open-in-editor][data-code="${uuid}"]`
+  );
+
+  // Check if we're running inside Unity Web Browser
+  if (
+    typeof window.uwb !== "undefined" &&
+    typeof window.uwb.ExecuteJsMethod === "function"
+  ) {
+    try {
+      // Send code to Unity using the registered JS method
+      const result = window.uwb.ExecuteJsMethod("OpenInEditor", {
+        Content: codeContent,
+        Language: lang || "text",
+      });
+
+      if (result) {
+        // Show success feedback
+        if (button) {
+          button.classList.add("text-green-500");
+          const originalText = button.innerHTML;
+          button.innerHTML = `
+            <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <p class="text-xs" style="margin: 0px;padding: 0px;">Sent!</p>
+          `;
+          button.setAttribute("disabled", true);
+
+          setTimeout(() => {
+            button.classList.remove("text-green-500");
+            button.innerHTML = originalText;
+            button.removeAttribute("disabled");
+          }, 2500);
+        }
+        console.log(
+          `[OpenInEditor] Successfully sent ${codeContent.length} characters to Unity`
+        );
+      } else {
+        console.error("[OpenInEditor] Unity method returned false");
+      }
+    } catch (error) {
+      console.error("[OpenInEditor] Error calling Unity method:", error);
+    }
+  } else {
+    // Fallback: copy to clipboard if not running in Unity
+    console.warn(
+      "[OpenInEditor] Not running in Unity Web Browser, copying to clipboard instead"
+    );
+    window.navigator.clipboard.writeText(codeContent);
+
+    if (button) {
+      button.classList.add("text-yellow-500");
+      const originalText = button.innerHTML;
+      button.innerHTML = `
+        <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+        <p class="text-xs" style="margin: 0px;padding: 0px;">Copied!</p>
+      `;
+
+      setTimeout(() => {
+        button.classList.remove("text-yellow-500");
+        button.innerHTML = originalText;
+      }, 2500);
+    }
+  }
+
+  return true;
+}
+
 // Listens and hunts for all data-code-snippet clicks.
 export function setEventDelegatorForCodeSnippets() {
   document?.addEventListener("click", function (e) {
@@ -118,5 +205,20 @@ export function setEventDelegatorForCodeSnippets() {
     const uuidCode = target?.dataset?.code;
     if (!uuidCode) return false;
     copyCodeSnippet(uuidCode);
+  });
+}
+
+// *** NEW FUNCTION: Listens and hunts for all data-open-in-editor clicks ***
+export function setEventDelegatorForOpenInEditor() {
+  document?.addEventListener("click", function (e) {
+    const target = e.target.closest("[data-open-in-editor]");
+    if (!target) return false;
+
+    const uuidCode = target.dataset?.code;
+    const lang = target.dataset?.lang || "";
+
+    if (!uuidCode) return false;
+
+    openCodeInEditor(uuidCode, lang);
   });
 }
