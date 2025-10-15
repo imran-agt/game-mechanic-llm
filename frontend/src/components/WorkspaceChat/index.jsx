@@ -91,10 +91,12 @@ export default function WorkspaceChat({ loading, workspace }) {
 // but still be able to attach a handler to copy code snippets on all elements
 // that are code snippets.
 function copyCodeSnippet(uuid) {
-  const target = document.querySelector(`[data-code="${uuid}"]`);
+  const target = document.querySelector(
+    `[data-code-snippet][data-code="${uuid}"]`
+  );
   if (!target) return false;
   const markdown =
-    target.parentElement?.parentElement?.querySelector(
+    target.parentElement?.parentElement?.parentElement?.querySelector(
       "pre:first-of-type"
     )?.innerText;
   if (!markdown) return false;
@@ -102,7 +104,10 @@ function copyCodeSnippet(uuid) {
   window.navigator.clipboard.writeText(markdown);
   target.classList.add("text-green-500");
   const originalText = target.innerHTML;
-  target.innerText = "Copied!";
+  target.innerHTML = `
+    <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    <p class="text-xs" style="margin: 0px;padding: 0px;">Copied!</p>
+  `;
   target.setAttribute("disabled", true);
 
   setTimeout(() => {
