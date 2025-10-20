@@ -10,7 +10,7 @@ export default function QDrantDBOptions({ settings }) {
             type="url"
             name="QdrantEndpoint"
             className="border-none bg-theme-settings-input-bg text-white placeholder:text-theme-settings-input-placeholder text-sm rounded-lg focus:outline-primary-button active:outline-primary-button outline-none block w-full p-2.5"
-            placeholder="http://localhost:6633"
+            placeholder="http://localhost:6333"
             defaultValue={settings?.QdrantEndpoint}
             required={true}
             autoComplete="off"
