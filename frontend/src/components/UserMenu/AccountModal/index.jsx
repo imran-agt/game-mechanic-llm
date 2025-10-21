@@ -184,6 +184,7 @@ export default function AccountModal({ user, hideModal }) {
                 />
               </div>
               <div className="flex gap-x-16">
+                {/*
                 <div className="flex flex-col gap-y-6">
                   <ThemePreference />
                   <LanguagePreference />
@@ -192,6 +193,7 @@ export default function AccountModal({ user, hideModal }) {
                   <AutoSubmitPreference />
                   <AutoSpeakPreference />
                 </div>
+                */}
               </div>
             </div>
             <div className="flex justify-between items-center border-t border-theme-modal-border pt-4 p-6">

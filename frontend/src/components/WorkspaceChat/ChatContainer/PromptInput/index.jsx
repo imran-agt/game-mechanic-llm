@@ -320,14 +320,7 @@ export default function PromptInput({
             <div className="flex justify-between py-3.5 mx-3 mb-1">
               <div className="flex gap-x-2">
                 <AttachItem />
-                <SlashCommandsButton
-                  showing={showSlashCommand}
-                  setShowSlashCommand={setShowSlashCommand}
-                />
-                <AvailableAgentsButton
-                  showing={showAgents}
-                  setShowAgents={setShowAgents}
-                />
+
                 <TextSizeButton />
                 <LLMSelectorAction />
               </div>
@@ -341,6 +334,18 @@ export default function PromptInput({
     </div>
   );
 }
+
+/*
+this code block goes under the attachItem component for the two options to show in the chat input area
+   <SlashCommandsButton
+                  showing={showSlashCommand}
+                  setShowSlashCommand={setShowSlashCommand}
+                />
+                <AvailableAgentsButton
+                  showing={showAgents}
+                  setShowAgents={setShowAgents}
+                />
+*/
 
 /**
  * Handle event listeners to prevent the send button from being used
