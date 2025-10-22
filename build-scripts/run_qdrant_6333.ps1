@@ -1,0 +1,1 @@
+docker run -d --name qdrant-db -p 6333:6333 -v qdrant_data_volume:/qdrant/storage qdrant/qdrant
