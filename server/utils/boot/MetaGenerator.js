@@ -67,7 +67,7 @@ class MetaGenerator {
       { tag: "meta", props: { property: "og:type", content: "website" } },
       {
         tag: "meta",
-        props: { property: "og:url", content: "https://anythingllm.com" },
+        props: { property: "og:url", content: "https://agtslots.com" },
       },
       {
         tag: "meta",
@@ -87,8 +87,7 @@ class MetaGenerator {
         tag: "meta",
         props: {
           property: "og:image",
-          content:
-            "https://raw.githubusercontent.com/Mintplex-Labs/anything-llm/master/images/promo.png",
+          content: "https://agtslots.com",
         },
       },
 
@@ -99,7 +98,7 @@ class MetaGenerator {
       },
       {
         tag: "meta",
-        props: { property: "twitter:url", content: "https://anythingllm.com" },
+        props: { property: "twitter:url", content: "https://agtslots.com" },
       },
       {
         tag: "meta",
@@ -189,9 +188,7 @@ class MetaGenerator {
         {
           tag: "title",
           props: null,
-          content:
-            customTitle ??
-            "Game Mechanic | AGT Coder LLM",
+          content: customTitle ?? "Game Mechanic | AGT Coder LLM",
         },
       ];
     }

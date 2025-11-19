@@ -132,11 +132,11 @@ const TRANSLATIONS = {
 
   welcomeMessage: {
     part1:
-      "Welcome to Game Mechanic, Game Mechanic is an in-house AI research tool created by Imran Arafat.",
+      "Welcome to Game Mechanic, Game Mechanic is an in-house AI research tool created by AGT Research & Engineering.",
     part2:
-      "Game Mechanic is a custom fine tuned model inference tool for LLMs.",
+      "Game Mechanic is a unified inference platform that enables developers to interact with both local fine-tuned language models and cloud-based LLMs through standardized API interfaces. The platform provides low-latency local inference with complete control over model deployment, ensuring data privacy and eliminating external dependencies for critical workloads. Its hybrid architecture allows seamless switching between local and remote models based on performance requirements and sensitivity constraints. Game Mechanic implements local Retrieval-Augmented Generation (RAG) with semantic search capabilities, enabling context-aware responses by querying custom knowledge bases without external data transmission. The platform maintains proprietary documentation, codebases, and domain-specific knowledge in local vector storage, ensuring security and compliance while enhancing model outputs. Its modular architecture separates inference, retrieval, and orchestration layers, allowing independent scaling and optimization of each component. This design supports rapid prototyping with API-backed models and production deployment with specialized fine-tuned models. Game Mechanic's abstraction layer provides consistent interaction patterns regardless of the underlying model source, simplifying development workflows. The platform is particularly suited for applications requiring domain-specific expertise, data privacy, or low-latency inference. It bridges the gap between experimental AI integration and production-ready systems with flexible deployment strategies.",
     part3:
-      "Game Mechanic runs locally on the corporate network with local database! None of your data ever goes out of the network. The Game Mechanic is an expert of GDK Programming and State Machine Design. It can build State Machine Graphs from plain text conversation. The State Machine Graph can be compiled to generate production ready game code for the EGM.",
+      "Game Mechanic runs inside the corporate network with a local vector database! None of the data ever goes out of the network. The Game Mechanic is an expert of GDK Programming and State Machine Design. It can build State Machine Graphs from plain text conversation. The State Machine Graph can be compiled to generate production ready game code for the EGM.",
     githubIssue: "Read GDK documentation",
     user1: "How do I get started?!",
     part4:
@@ -144,7 +144,7 @@ const TRANSLATIONS = {
     createWorkspace: "Create your first workspace",
     user2: "What is this tool for?",
     part5:
-      "Game Mechanic a fine tuned LLM inference tool.\n\nGame Mechanic offers two ways of working with a fine tuned LLM:\n\n<i>Unity3d:</i> Access the Game Mechanic interface through the Unity Editor and build State Machine Graph from plain text conversation. \n\n<i>EGM Portal:</i> Access the EGM portal in the web browser to use the Game Mechanic as a learning assistant. \n\nYou can add or remove the documents \nto manage context of the conversation.",
+      "Game Mechanic is a fine tuned LLM inference tool.\n\nGame Mechanic offers two ways of working with an LLM:\n\n<i>Unity3d:</i> Access the Game Mechanic interface through the Unity Editor and build State Machine Graph from plain text conversation. \n\n<i>EGM Portal:</i> Access the EGM portal in the web browser to use the Game Mechanic as a learning assistant. \n\nYou can add or remove the documents \nto manage context of the conversation.",
     user3: "Sounds great! Let me try it out.",
     part6: "Good luck! Feel free to reach out if you have any questions.",
     starOnGitHub: "Development Blog",
