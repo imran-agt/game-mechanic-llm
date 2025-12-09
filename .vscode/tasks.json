@@ -89,6 +89,36 @@
         "clear": false
       },
       "label": "Frontend: run"
+    },
+    {
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "statusbar": {
+          "color": "#00ff00",
+          "detail": "Build Windows EXE with Bun",
+          "label": "Build: $(package) Windows EXE",
+          "running": {
+            "color": "#00ff00",
+            "label": "Build: $(gear~spin) Building EXE..."
+          }
+        }
+      },
+      "command": "node build-exe.cjs",
+      "runOptions": {
+        "instanceLimit": 1,
+        "reevaluateOnRerun": true
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "dedicated",
+        "showReuseMessage": false,
+        "clear": true
+      },
+      "label": "Build Windows EXE",
+      "problemMatcher": []
     }
   ]
 }

@@ -1,0 +1,19 @@
+{
+  "recommendations": [
+    "actboy168.tasks",
+    "bierner.github-markdown-preview",
+    "bradlc.vscode-tailwindcss",
+    "dbaeumer.vscode-eslint",
+    "editorconfig.editorconfig",
+    "esbenp.prettier-vscode",
+    "exiasr.hadolint",
+    "flowtype.flow-for-vscode",
+    "gamunu.vscode-yarn",
+    "hashicorp.terraform",
+    "mariusschulz.yarn-lock-syntax",
+    "ms-azuretools.vscode-docker",
+    "streetsidesoftware.code-spell-checker",
+    "tombonnike.vscode-status-bar-format-toggle",
+    "ms-vscode.js-debug"
+  ]
+}

@@ -1,6 +1,9 @@
-process.env.NODE_ENV === "development"
-  ? require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` })
-  : require("dotenv").config();
+// Only load dotenv if not already configured by index.js
+if (!process.env.DOTENV_CONFIGURED) {
+  process.env.NODE_ENV === "development"
+    ? require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` })
+    : require("dotenv").config();
+}
 const { viewLocalFiles, normalizePath, isWithin } = require("../utils/files");
 const { purgeDocument, purgeFolder } = require("../utils/files/purgeDocument");
 const { getVectorDbClass } = require("../utils/helpers");
@@ -116,7 +119,7 @@ function systemEndpoints(app) {
 
   app.post("/request-token", async (request, response) => {
     try {
-      const bcrypt = require("bcrypt");
+      const bcrypt = require("bcryptjs");
 
       if (await SystemSettings.isMultiUserMode()) {
         if (simpleSSOLoginDisabled()) {

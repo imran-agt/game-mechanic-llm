@@ -7,6 +7,18 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const path = require("path");
+
+// Helper to determine base path for compiled executable or development
+const getBasePath = () => {
+  // Check if running as Bun compiled executable
+  if (typeof Bun !== 'undefined' && Bun.main === import.meta.path) {
+    return path.dirname(process.execPath);
+  }
+  // Otherwise use __dirname for normal Node.js/Bun execution
+  return __dirname;
+};
+
+const basePath = getBasePath();
 const { ACCEPTED_MIMES } = require("./utils/constants");
 const { reqBody } = require("./utils/http");
 const { processSingleFile } = require("./processSingleFile");

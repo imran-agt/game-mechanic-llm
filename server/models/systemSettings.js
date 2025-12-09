@@ -1,6 +1,9 @@
-process.env.NODE_ENV === "development"
-  ? require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` })
-  : require("dotenv").config();
+// Only load dotenv if not already configured by index.js
+if (!process.env.DOTENV_CONFIGURED) {
+  process.env.NODE_ENV === "development"
+    ? require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` })
+    : require("dotenv").config();
+}
 
 const { default: slugify } = require("slugify");
 const { isValidUrl, safeJsonParse } = require("../utils/http");

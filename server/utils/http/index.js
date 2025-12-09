@@ -1,6 +1,10 @@
-process.env.NODE_ENV === "development"
-  ? require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` })
-  : require("dotenv").config();
+// Only load dotenv if not already configured by index.js
+// index.js sets DOTENV_CONFIGURED=true after handling env setup
+if (!process.env.DOTENV_CONFIGURED) {
+  process.env.NODE_ENV === "development"
+    ? require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` })
+    : require("dotenv").config();
+}
 const JWT = require("jsonwebtoken");
 const { User } = require("../../models/user");
 const { jsonrepair } = require("jsonrepair");

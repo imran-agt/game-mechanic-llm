@@ -98,7 +98,7 @@ const User = {
           "Username must only contain lowercase letters, periods, numbers, underscores, and hyphens with no spaces"
         );
 
-      const bcrypt = require("bcrypt");
+      const bcrypt = require("bcryptjs");
       const hashedPassword = bcrypt.hashSync(password, 10);
       const user = await prisma.users.create({
         data: {
@@ -163,7 +163,7 @@ const User = {
         if (!passwordCheck.checkedOK) {
           return { success: false, error: passwordCheck.error };
         }
-        const bcrypt = require("bcrypt");
+        const bcrypt = require("bcryptjs");
         updates.password = bcrypt.hashSync(updates.password, 10);
       }
 

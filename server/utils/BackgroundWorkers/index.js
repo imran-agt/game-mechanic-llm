@@ -1,13 +1,31 @@
 const path = require("path");
+const fs = require("fs");
 const Graceful = require("@ladjs/graceful");
 const Bree = require("@mintplex-labs/bree");
 const setLogger = require("../logger");
+
+// Helper to determine jobs path for compiled executable or development
+const getJobsPath = () => {
+  // Check if running as Bun compiled executable
+  // In compiled mode on Windows, __dirname may be malformed (missing drive letter)
+  const isMalformedPath = process.platform === 'win32' &&
+                         __dirname.startsWith('\\') &&
+                         !__dirname.match(/^[A-Z]:\\/i);
+
+  if (isMalformedPath || !fs.existsSync(__dirname)) {
+    // Use the directory containing the executable
+    return path.join(path.dirname(process.execPath), 'jobs');
+  }
+
+  // Normal execution - use relative path from __dirname
+  return path.resolve(__dirname, "../../jobs");
+};
 
 class BackgroundService {
   name = "BackgroundWorkerService";
   static _instance = null;
   documentSyncEnabled = false;
-  #root = path.resolve(__dirname, "../../jobs");
+  #root = getJobsPath();
 
   #alwaysRunJobs = [
     {
