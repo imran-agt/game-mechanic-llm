@@ -398,7 +398,15 @@ echo Creating .env file...
     echo ###########################################
     echo ######## LLM API SELECTION ###############
     echo ###########################################
-    echo # Uncomment and configure your preferred LLM provider
+    echo # LMStudio is pre-configured for local LLM usage
+    echo # Make sure LMStudio is running on port 1234
+    echo.
+    echo LLM_PROVIDER='lmstudio'
+    echo LMSTUDIO_BASE_PATH='http://localhost:1234/v1'
+    echo LMSTUDIO_MODEL_PREF='Loaded from Chat UI'
+    echo LMSTUDIO_MODEL_TOKEN_LIMIT=4096
+    echo.
+    echo # Alternative providers ^(comment LMStudio above and uncomment below^):
     echo.
     echo # LLM_PROVIDER='openai'
     echo # OPEN_AI_KEY=sk-your-api-key-here
@@ -414,12 +422,20 @@ echo Creating .env file...
     echo.
     echo # See server.env.example for all LLM providers
     echo.
+    echo # ANTHROPIC_MODEL_PREF='claude-3-5-sonnet-20241022'
+    echo.
+    echo # LLM_PROVIDER='ollama'
+    echo # OLLAMA_BASE_PATH='http://localhost:11434'
+    echo # OLLAMA_MODEL_PREF='llama2'
+    echo.
+    echo # See server.env.example for all LLM providers
+    echo.
     echo DISABLE_TELEMETRY=true
 ) > .env
 
-echo.
-echo ========================================================
-echo    Setup Complete!
+echo 1. Make sure LMStudio is running on port 1234 with a model loaded
+    echo 2. Run start.bat to launch the application
+    echo 3. Open http://localhost:3001 in your browser
 echo ========================================================
 echo.
 echo [OK] .env file created successfully

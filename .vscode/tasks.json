@@ -96,10 +96,10 @@
         "cwd": "${workspaceFolder}",
         "statusbar": {
           "color": "#00ff00",
-          "detail": "Build Windows EXE with Bun",
+          "detail": "Build Windows EXE with LMStudio pre-configured",
           "label": "Build: $(package) Windows EXE",
           "running": {
-            "color": "#00ff00",
+            "color": "#ff9900",
             "label": "Build: $(gear~spin) Building EXE..."
           }
         }
