@@ -108,8 +108,21 @@ ${colors.bright}${colors.cyan}╔═══════════════�
   // Step 1: Clean and prepare dist directory
   log.step('Step 1/6: Preparing build directory');
   if (fs.existsSync(config.distDir)) {
-    fs.rmSync(config.distDir, { recursive: true, force: true });
-    log.info('Cleaned existing dist directory');
+    try {
+      // Remove only the contents, not the directory itself
+      const files = fs.readdirSync(config.distDir);
+      for (const file of files) {
+        const filePath = path.join(config.distDir, file);
+        try {
+          fs.rmSync(filePath, { recursive: true, force: true });
+        } catch (e) {
+          log.warn(`Could not remove ${file}: ${e.message}`);
+        }
+      }
+      log.info('Cleaned existing dist directory');
+    } catch (e) {
+      log.warn(`Could not clean dist directory: ${e.message}`);
+    }
   }
   ensureDir(config.distDir);
 
@@ -181,7 +194,7 @@ ${colors.bright}${colors.cyan}╔═══════════════�
   }
 
   const collectorBuildSuccess = runCommand(
-    `${config.bunPath} build --compile --target=bun-windows-x64 --minify --sourcemap --external typescript ./index.js --outfile ${path.join(config.distDir, 'gamemechanic-collector.exe')}`,
+    `${config.bunPath} build --compile --target=bun-windows-x64 --minify --sourcemap --external typescript --external fluent-ffmpeg --external pdf-parse ./index.js --outfile ${path.join(config.distDir, 'gamemechanic-collector.exe')}`,
     config.collectorDir,
     'Compiling collector to Windows EXE'
   );
@@ -189,6 +202,27 @@ ${colors.bright}${colors.cyan}╔═══════════════�
   if (!collectorBuildSuccess) {
     log.error('Collector build failed. Aborting.');
     process.exit(1);
+  }
+
+  // Copy external collector dependencies to dist/node_modules
+  log.info('Copying external collector dependencies');
+  const collectorNodeModulesPath = path.join(config.collectorDir, 'node_modules');
+  const distNodeModulesPath = path.join(config.distDir, 'node_modules');
+
+  // External packages that need to be copied
+  // Also include hoisted dependencies of external packages:
+  // - pdf-parse requires: node-ensure, debug
+  // - debug requires: ms
+  const externalPackages = ['pdf-parse', 'fluent-ffmpeg', 'typescript', 'node-ensure', 'debug', 'ms'];
+
+  for (const pkg of externalPackages) {
+    const srcPkg = path.join(collectorNodeModulesPath, pkg);
+    const destPkg = path.join(distNodeModulesPath, pkg);
+
+    if (fs.existsSync(srcPkg)) {
+      copyRecursive(srcPkg, destPkg);
+      log.success(`Copied ${pkg} to dist/node_modules`);
+    }
   }
 
   // Step 6: Copy necessary files and create distribution structure
@@ -211,6 +245,17 @@ ${colors.bright}${colors.cyan}╔═══════════════�
   // Create storage directory
   const storageDir = path.join(config.distDir, 'storage');
   ensureDir(storageDir);
+
+  // Create hotdir directory for collector
+  const hotDir = path.join(config.distDir, 'hotdir');
+  ensureDir(hotDir);
+
+  // Copy __HOTDIR__.md placeholder
+  const hotdirMd = path.join(config.collectorDir, 'hotdir', '__HOTDIR__.md');
+  if (fs.existsSync(hotdirMd)) {
+    fs.copyFileSync(hotdirMd, path.join(hotDir, '__HOTDIR__.md'));
+    log.success('Created hotdir with placeholder');
+  }
 
   // Create public directory in dist (for server static files)
   const distPublic = path.join(config.distDir, 'public');
@@ -326,6 +371,46 @@ pause > nul
   fs.writeFileSync(path.join(config.distDir, 'start.bat'), startScript);
   log.success('Created start.bat launch script');
 
+  // Create QDrant start script
+  const qdrantScript = `@echo off
+title Start QDrant Vector Database
+
+echo.
+echo ========================================================
+echo    Starting QDrant Vector Database
+echo ========================================================
+echo.
+echo This will start QDrant in Docker on port 6333
+echo Make sure Docker is installed and running
+echo.
+echo Press Ctrl+C to stop QDrant when done
+echo.
+
+:: Check if Docker is running
+docker info >nul 2>&1
+if %ERRORLEVEL% NEQ 0 (
+    echo [ERROR] Docker is not running!
+    echo Please start Docker Desktop and try again
+    pause
+    exit /b 1
+)
+
+echo [OK] Docker is running
+echo.
+echo Starting QDrant container...
+echo.
+
+:: Run QDrant with persistent storage
+docker run -p 6333:6333 -p 6334:6334 ^
+    -v "%cd%\\qdrant_storage:/qdrant/storage" ^
+    qdrant/qdrant
+
+pause
+`;
+
+  fs.writeFileSync(path.join(config.distDir, 'start-qdrant.bat'), qdrantScript);
+  log.success('Created start-qdrant.bat QDrant launcher');
+
   // Create setup script for .env configuration
   const setupScript = `@echo off
 setlocal enabledelayedexpansion
@@ -353,6 +438,14 @@ if exist ".env" (
 )
 
 :: Create storage directory
+
+:: Create hotdir directory
+if not exist "hotdir" (
+    mkdir hotdir
+    echo [OK] Created hotdir directory
+) else (
+    echo [OK] Hotdir directory exists
+)
 if not exist "storage" (
     mkdir storage
     echo [OK] Created storage directory
@@ -360,6 +453,9 @@ if not exist "storage" (
     echo [OK] Storage directory exists
 )
 
+    echo.
+    echo # Collector configuration
+    echo COLLECTOR_HOTDIR="./hotdir"     # Document upload directory
 :: Check if server.env.example exists
 if not exist "server.env.example" (
     echo [ERROR] server.env.example not found!
@@ -389,6 +485,21 @@ echo Creating .env file...
     echo.
     echo SERVER_PORT=3001
     echo DATABASE_URL="file:./storage/gamemechanic-llm.db"
+    echo.
+    echo # Collector Configuration
+    echo COLLECTOR_HOTDIR="./hotdir"
+    echo COLLECTOR_PORT=8888
+    echo.
+    echo ###########################################
+    echo ######## VECTOR DATABASE #################
+    echo ###########################################
+    echo # QDrant is configured for RAG document storage
+    echo # Make sure QDrant is running on port 6333
+    echo # Docker: docker run -p 6333:6333 qdrant/qdrant
+    echo.
+    echo VECTOR_DB="qdrant"
+    echo QDRANT_ENDPOINT="http://localhost:6333"
+    echo # QDRANT_API_KEY=     # Optional for local instance
     echo.
     echo # Security Keys - Auto-generated
     echo JWT_SECRET="%JWT_SECRET%"
@@ -448,9 +559,10 @@ echo.
 echo ========================================================
 echo    Next Steps:
 echo ========================================================
-echo.
-echo 1. Edit .env to configure your LLM provider
-echo 2. Run start.bat to launch the application
+    echo 1. Run start-qdrant.bat in a separate window to start QDrant vector DB
+    echo 2. Make sure LMStudio is running on port 1234 with a model loaded
+    echo 3. Run start.bat to launch the application
+    echo 4. Open http://localhost:3001 in your browser
 echo 3. Open http://localhost:3001 in your browser
 echo.
 goto :end

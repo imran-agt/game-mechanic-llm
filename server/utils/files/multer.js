@@ -4,17 +4,39 @@ const fs = require("fs");
 const { v4 } = require("uuid");
 const { normalizePath } = require(".");
 
+// Helper to get hotdir path - uses same logic as collector
+const getHotdirPath = () => {
+  // Use COLLECTOR_HOTDIR if set
+  if (process.env.COLLECTOR_HOTDIR) {
+    return path.resolve(process.env.COLLECTOR_HOTDIR);
+  }
+
+  // Check if running as Bun compiled executable
+  const isCompiledExe = process.execPath.toLowerCase().includes('gamemechanic-server.exe');
+  const isMalformedPath = process.platform === 'win32' &&
+                         __dirname.startsWith('\\') &&
+                         !__dirname.match(/^[A-Z]:\\/i);
+
+  if (isCompiledExe || isMalformedPath || !fs.existsSync(__dirname)) {
+    // Use the directory containing the executable
+    const execDir = path.dirname(process.execPath);
+    return path.resolve(execDir, "hotdir");
+  }
+
+  // Development mode - resolve relative to this file
+  return path.resolve(__dirname, `../../../collector/hotdir`);
+};
+
+const hotdirPath = getHotdirPath();
+console.log(`[Multer] Using hotdir path: ${hotdirPath}`);
+
 /**
  * Handle File uploads for auto-uploading.
  * Mostly used for internal GUI/API uploads.
  */
 const fileUploadStorage = multer.diskStorage({
   destination: function (_, __, cb) {
-    const uploadOutput =
-      process.env.NODE_ENV === "development"
-        ? path.resolve(__dirname, `../../../collector/hotdir`)
-        : path.resolve(process.env.STORAGE_DIR, `../../collector/hotdir`);
-    cb(null, uploadOutput);
+    cb(null, hotdirPath);
   },
   filename: function (_, file, cb) {
     file.originalname = normalizePath(
@@ -30,11 +52,7 @@ const fileUploadStorage = multer.diskStorage({
  */
 const fileAPIUploadStorage = multer.diskStorage({
   destination: function (_, __, cb) {
-    const uploadOutput =
-      process.env.NODE_ENV === "development"
-        ? path.resolve(__dirname, `../../../collector/hotdir`)
-        : path.resolve(process.env.STORAGE_DIR, `../../collector/hotdir`);
-    cb(null, uploadOutput);
+    cb(null, hotdirPath);
   },
   filename: function (_, file, cb) {
     file.originalname = normalizePath(

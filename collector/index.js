@@ -19,7 +19,7 @@ const getBasePath = () => {
 };
 
 const basePath = getBasePath();
-const { ACCEPTED_MIMES } = require("./utils/constants");
+const { ACCEPTED_MIMES, WATCH_DIRECTORY } = require("./utils/constants");
 const { reqBody } = require("./utils/http");
 const { processSingleFile } = require("./processSingleFile");
 const { processLink, getLinkText } = require("./processLink");
@@ -70,11 +70,11 @@ app.post(
         .status(200)
         .json({ filename: targetFilename, success, reason, documents });
     } catch (e) {
-      console.error(e);
+      console.error(`[Collector] Error processing file "${filename}":`, e);
       response.status(200).json({
         filename: filename,
         success: false,
-        reason: "A processing error occurred.",
+        reason: `A processing error occurred: ${e.message}`,
         documents: [],
       });
     }
@@ -103,11 +103,11 @@ app.post(
         .status(200)
         .json({ filename: targetFilename, success, reason, documents });
     } catch (e) {
-      console.error(e);
+      console.error(`[Collector] Error parsing file "${filename}":`, e);
       response.status(200).json({
         filename: filename,
         success: false,
-        reason: "A processing error occurred.",
+        reason: `A parsing error occurred: ${e.message}`,
         documents: [],
       });
     }
@@ -128,11 +128,11 @@ app.post(
       } = await processLink(link, scraperHeaders, metadata);
       response.status(200).json({ url: link, success, reason, documents });
     } catch (e) {
-      console.error(e);
+      console.error(`[Collector] Error processing link "${link}":`, e);
       response.status(200).json({
         url: link,
         success: false,
-        reason: "A processing error occurred.",
+        reason: `A link processing error occurred: ${e.message}`,
         documents: [],
       });
     }
@@ -175,11 +175,11 @@ app.post(
         .status(200)
         .json({ filename: metadata.title, success, reason, documents });
     } catch (e) {
-      console.error(e);
+      console.error(`[Collector] Error processing raw text "${metadata?.title}":`, e);
       response.status(200).json({
         filename: metadata?.title || "Unknown-doc.txt",
         success: false,
-        reason: "A processing error occurred.",
+        reason: `A raw text processing error occurred: ${e.message}`,
         documents: [],
       });
     }
@@ -197,10 +197,12 @@ app.all("*", function (_, response) {
   response.sendStatus(200);
 });
 
+const PORT = process.env.COLLECTOR_PORT || 8888;
 app
-  .listen(8888, async () => {
+  .listen(PORT, async () => {
     await wipeCollectorStorage();
-    console.log(`Document processor app listening on port 8888`);
+    console.log(`[Collector] Document processor app listening on port ${PORT}`);
+    console.log(`[Collector] Using hotdir from constants: ${WATCH_DIRECTORY}`);
   })
   .on("error", function (_) {
     process.once("SIGUSR2", function () {

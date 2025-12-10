@@ -1,4 +1,37 @@
-const WATCH_DIRECTORY = require("path").resolve(__dirname, "../hotdir");
+const path = require("path");
+const fs = require("fs");
+
+// Helper to determine base path for compiled executable or development
+const getBasePath = () => {
+  // Check if running as Bun compiled executable
+  const isCompiledExe = process.execPath.toLowerCase().includes('gamemechanic-collector.exe');
+
+  // Also check for malformed __dirname (Bun compiled on Windows)
+  const isMalformedPath = process.platform === 'win32' &&
+                         __dirname.startsWith('\\') &&
+                         !__dirname.match(/^[A-Z]:\\/i);
+
+  if (isCompiledExe || isMalformedPath || !fs.existsSync(__dirname)) {
+    // Use the directory containing the executable
+    const execDir = path.dirname(process.execPath);
+    console.log(`[Collector] Running as compiled executable from: ${execDir}`);
+    return execDir;
+  }
+
+  // Normal execution - use __dirname
+  console.log(`[Collector] Running in development mode from: ${__dirname}`);
+  return path.resolve(__dirname, "..");
+};
+
+const basePath = getBasePath();
+
+// Allow COLLECTOR_HOTDIR to be configured via environment variable
+// Falls back to ./hotdir in the collector directory
+const WATCH_DIRECTORY = process.env.COLLECTOR_HOTDIR
+  ? path.resolve(process.env.COLLECTOR_HOTDIR)
+  : path.resolve(basePath, "hotdir");
+
+console.log(`[Collector] Watch directory (hotdir): ${WATCH_DIRECTORY}`);
 
 const ACCEPTED_MIMES = {
   "text/plain": [".txt", ".md", ".org", ".adoc", ".rst"],

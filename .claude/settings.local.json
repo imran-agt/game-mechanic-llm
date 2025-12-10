@@ -19,7 +19,8 @@
       "Bash(find:*)",
       "Bash(chmod:*)",
       "Bash(sudo rm:*)",
-      "Bash(npm run build:exe:*)"
+      "Bash(npm run build:exe:*)",
+      "Bash(tee:*)"
     ],
     "deny": [],
     "ask": []

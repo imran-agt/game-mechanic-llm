@@ -153,8 +153,9 @@ function writeToServerDocuments({
 // there were some large file failures that we unable to be removed a reboot will
 // force remove them.
 async function wipeCollectorStorage() {
+  const { WATCH_DIRECTORY } = require("../constants");
   const cleanHotDir = new Promise((resolve) => {
-    const directory = path.resolve(__dirname, "../../hotdir");
+    const directory = WATCH_DIRECTORY;
     fs.readdir(directory, (err, files) => {
       if (err || !files) return resolve();
 

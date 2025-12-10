@@ -279,3 +279,181 @@ For issues or questions:
 ## License
 
 MIT License - See LICENSE file for details
+
+## QDrant Vector Database Configuration
+
+### Overview
+
+QDrant is pre-configured as the vector database for RAG (Retrieval Augmented Generation) document storage. This enables the LLM to search and retrieve relevant information from your uploaded documents.
+
+### Quick Start with QDrant
+
+**Step 1: Start QDrant**
+```batch
+cd dist
+start-qdrant.bat
+```
+
+This will:
+- Check if Docker is installed and running
+- Start QDrant container on port 6333 with persistent storage
+- Create a `qdrant_storage/` directory for data persistence
+
+**Step 2: Verify QDrant is Running**
+Open your browser to: `http://localhost:6333/dashboard`
+
+You should see the QDrant dashboard.
+
+### QDrant Configuration in .env
+
+After running `setup.bat`, your `.env` will contain:
+
+```env
+VECTOR_DB="qdrant"
+QDRANT_ENDPOINT="http://localhost:6333"
+# QDRANT_API_KEY=     # Optional for local instance
+```
+
+### QDrant Prerequisites
+
+1. **Docker Desktop** must be installed and running
+2. **Sufficient disk space** for vector storage (varies by document size)
+3. **Port 6333** must be available (QDrant API)
+4. **Port 6334** must be available (QDrant gRPC, optional)
+
+### Docker Command (Manual)
+
+If you prefer to run QDrant manually:
+
+```bash
+docker run -p 6333:6333 -p 6334:6334 \
+  -v "$(pwd)/qdrant_storage:/qdrant/storage" \
+  qdrant/qdrant
+```
+
+### How RAG Works with QDrant
+
+1. **Document Upload**: When you upload documents via the UI
+2. **Chunking**: Documents are split into chunks
+3. **Vectorization**: Each chunk is converted to embeddings
+4. **Storage**: Embeddings are stored in QDrant collections (namespaces)
+5. **Retrieval**: When you ask a question, relevant chunks are retrieved
+6. **Context**: Retrieved chunks are added to the LLM prompt
+
+### QDrant Collections (Namespaces)
+
+Each workspace creates its own QDrant collection:
+- Collection name format: `workspace-{workspace-id}`
+- Automatic creation on first document upload
+- Persistent across server restarts
+
+### Troubleshooting QDrant
+
+**Error: QDrant::namespaceExists Not Found**
+- This is expected on first run before documents are uploaded
+- The namespace/collection will be created automatically when you:
+  1. Upload a document to a workspace
+  2. Enable document sync for a workspace
+
+**Error: Docker is not running**
+- Start Docker Desktop
+- Verify: `docker info`
+
+**Error: Port 6333 already in use**
+- Check for existing QDrant instance: `docker ps | grep qdrant`
+- Stop it: `docker stop <container-id>`
+- Or use a different port in .env: `QDRANT_ENDPOINT="http://localhost:6334"`
+
+**Error: Cannot connect to QDrant**
+- Verify QDrant is running: `curl http://localhost:6333/health`
+- Check Docker logs: `docker logs <container-id>`
+- Restart QDrant: `docker restart <container-id>`
+
+### QDrant Data Persistence
+
+Vector data is stored in: `dist/qdrant_storage/`
+
+To **backup** your vectors:
+```batch
+xcopy /E /I qdrant_storage qdrant_storage_backup
+```
+
+To **reset** QDrant (delete all vectors):
+```batch
+rmdir /S /Q qdrant_storage
+```
+Then restart QDrant with `start-qdrant.bat`
+
+### Alternative Vector Databases
+
+To use a different vector database:
+
+1. Edit `dist/.env`
+2. Comment out QDrant configuration
+3. Uncomment your preferred provider:
+
+```env
+# VECTOR_DB="qdrant"
+# QDRANT_ENDPOINT="http://localhost:6333"
+
+# Use LanceDB instead (file-based, no Docker needed)
+VECTOR_DB="lancedb"
+```
+
+Available options:
+- `lancedb` - File-based, no external service needed
+- `chroma` - Lightweight, good for development
+- `pinecone` - Cloud-based, requires API key
+- `weaviate` - Self-hosted or cloud
+- `pgvector` - PostgreSQL extension
+
+### QDrant Cloud (Optional)
+
+For production or team deployments, consider [QDrant Cloud](https://cloud.qdrant.io/):
+
+1. Create a free account
+2. Create a cluster
+3. Get your API endpoint and key
+4. Update `.env`:
+
+```env
+VECTOR_DB="qdrant"
+QDRANT_ENDPOINT="https://your-cluster.qdrant.io:6333"
+QDRANT_API_KEY="your-api-key-here"
+```
+
+### Performance Tips
+
+**Optimize QDrant Performance:**
+
+1. **Increase RAM allocation to Docker**
+   - Docker Desktop → Settings → Resources
+   - Recommended: 4GB+ for large document sets
+
+2. **Use SSD storage**
+   - QDrant benefits from fast disk I/O
+   - Mount `qdrant_storage` on SSD
+
+3. **Configure collection parameters**
+   - Done automatically by the application
+   - Uses Cosine distance for similarity search
+   - Vector dimensions match your embedding model
+
+### Monitoring QDrant
+
+**Check QDrant stats:**
+```batch
+curl http://localhost:6333/collections
+```
+
+**View collection details:**
+```batch
+curl http://localhost:6333/collections/{collection-name}
+```
+
+**Check point count:**
+```batch
+curl http://localhost:6333/collections/{collection-name}/points/count
+```
+
+Replace `{collection-name}` with your workspace collection name (e.g., `workspace-123`).
