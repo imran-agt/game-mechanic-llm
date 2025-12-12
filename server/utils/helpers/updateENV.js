@@ -1116,7 +1116,9 @@ async function updateENV(newENVs = {}, force = false, userId = null) {
   }
 
   await logChangesToEventLog(newValues, userId);
-  if (process.env.NODE_ENV === "production") dumpENV();
+  // Always dump ENV to persist settings, regardless of NODE_ENV
+  // This ensures settings persist in both development and production modes
+  dumpENV();
   return { newValues, error: error?.length > 0 ? error : false };
 }
 
@@ -1146,7 +1148,88 @@ function dumpENV() {
   const fs = require("fs");
   const path = require("path");
 
-  const frozenEnvs = {};
+  // Helper to determine base path for compiled executable or development
+  // This matches the logic in server/index.js to ensure .env is written to the same location it's read from
+  const getBasePath = () => {
+    // Check if running as Bun compiled executable
+    const isCompiledExe = process.execPath.toLowerCase().includes('gamemechanic-server.exe');
+
+    // Also check for malformed __dirname (Bun compiled on Windows)
+    const isMalformedPath = process.platform === 'win32' &&
+                           __dirname.startsWith('\\') &&
+                           !__dirname.match(/^[A-Z]:\\/i);
+
+    if (isCompiledExe || isMalformedPath || !fs.existsSync(__dirname)) {
+      // Use the directory containing the executable
+      const execDir = path.dirname(process.execPath);
+      console.log(`[dumpENV] Running as compiled executable, writing .env to: ${execDir}`);
+      return execDir;
+    }
+
+    // Normal execution - use __dirname and go up two levels to server directory
+    console.log(`[dumpENV] Running in development mode from: ${__dirname}`);
+    return path.resolve(__dirname, "../..");
+  };
+
+  const basePath = getBasePath();
+
+  // Determine the correct .env filename based on NODE_ENV and execution mode
+  // This must match what server/index.js loads on startup
+  const getEnvFilename = () => {
+    // Check if running as compiled executable
+    const isCompiledExe = process.execPath.toLowerCase().includes('gamemechanic-server.exe');
+    const isMalformedPath = process.platform === 'win32' &&
+                           __dirname.startsWith('\\') &&
+                           !__dirname.match(/^[A-Z]:\\/i);
+
+    if (isCompiledExe || isMalformedPath || !fs.existsSync(__dirname)) {
+      // Compiled executable always uses .env
+      return '.env';
+    }
+
+    // Development mode uses .env.development, production uses .env
+    if (process.env.NODE_ENV === "development") {
+      return '.env.development';
+    }
+    return '.env';
+  };
+
+  const envFilename = getEnvFilename();
+
+  // Read existing .env file to preserve settings not in protectedKeys
+  const envPath = path.join(basePath, envFilename);
+  const existingEnvContent = {};
+
+  if (fs.existsSync(envPath)) {
+    try {
+      const fileContent = fs.readFileSync(envPath, 'utf8');
+      const lines = fileContent.split('\n');
+
+      for (const line of lines) {
+        const trimmedLine = line.trim();
+        // Skip comments and empty lines
+        if (trimmedLine.startsWith('#') || trimmedLine === '') continue;
+
+        // Parse KEY=VALUE or KEY='VALUE' or KEY="VALUE"
+        const match = trimmedLine.match(/^([A-Z_][A-Z0-9_]*)=(.*)$/);
+        if (match) {
+          const [, key, value] = match;
+          // Remove quotes if present
+          let cleanValue = value.trim();
+          if ((cleanValue.startsWith("'") && cleanValue.endsWith("'")) ||
+              (cleanValue.startsWith('"') && cleanValue.endsWith('"'))) {
+            cleanValue = cleanValue.slice(1, -1);
+          }
+          existingEnvContent[key] = cleanValue;
+        }
+      }
+      console.log(`[dumpENV] Loaded ${Object.keys(existingEnvContent).length} existing settings from ${envFilename}`);
+    } catch (error) {
+      console.warn(`[dumpENV] Could not read existing .env file: ${error.message}`);
+    }
+  }
+
+  const frozenEnvs = { ...existingEnvContent }; // Start with existing settings
   const protectedKeys = [
     ...Object.values(KEY_MAPPING).map((values) => values.envKey),
     // Manually Add Keys here which are not already defined in KEY_MAPPING
@@ -1196,6 +1279,10 @@ function dumpENV() {
 
     // Allow setting a custom response timeout for Ollama
     "OLLAMA_RESPONSE_TIMEOUT",
+
+    // Collector settings
+    "COLLECTOR_HOTDIR",
+    "COLLECTOR_PORT",
   ];
 
   // Simple sanitization of each value to prevent ENV injection via newline or quote escaping.
@@ -1208,19 +1295,72 @@ function dumpENV() {
     return value.substring(0, firstOffendingCharIndex);
   }
 
+  // Update frozenEnvs with current process.env values for protectedKeys
+  // This ensures that newly set values override existing ones
   for (const key of protectedKeys) {
     const envValue = process.env?.[key] || null;
-    if (!envValue) continue;
-    frozenEnvs[key] = process.env?.[key] || null;
+    if (envValue) {
+      frozenEnvs[key] = envValue;
+    }
+    // If key doesn't exist in process.env, keep the existing value from file
   }
 
-  var envResult = `# Auto-dump ENV from system call on ${new Date().toTimeString()}\n`;
-  envResult += Object.entries(frozenEnvs)
-    .map(([key, value]) => `${key}='${sanitizeValue(value)}'`)
-    .join("\n");
+  // Build the .env file content preserving all settings
+  var envResult = `# GameMechanicLLM Configuration\n`;
+  envResult += `# Last updated: ${new Date().toISOString()}\n`;
+  envResult += `# This file is automatically maintained by the application\n\n`;
 
-  const envPath = path.join(__dirname, "../../.env");
+  // Sort keys for consistent output (but keep related settings together)
+  const sortedEntries = Object.entries(frozenEnvs).sort(([keyA], [keyB]) => {
+    // Group related keys together
+    const getGroup = (key) => {
+      if (key.startsWith('LLM_') || key.startsWith('LMSTUDIO_') ||
+          key.startsWith('OLLAMA_') || key.startsWith('OPENAI_') ||
+          key.startsWith('ANTHROPIC_')) return 'A_LLM';
+      if (key.startsWith('EMBEDDING_')) return 'B_EMBEDDING';
+      if (key.startsWith('VECTOR_') || key.startsWith('QDRANT_') ||
+          key.startsWith('PINECONE_') || key.startsWith('CHROMA_')) return 'C_VECTOR';
+      if (key.startsWith('COLLECTOR_')) return 'D_COLLECTOR';
+      if (key === 'SERVER_PORT' || key === 'DATABASE_URL') return 'E_SERVER';
+      if (key === 'JWT_SECRET' || key.startsWith('SIG_')) return 'F_SECURITY';
+      return 'Z_OTHER';
+    };
+
+    const groupA = getGroup(keyA);
+    const groupB = getGroup(keyB);
+
+    if (groupA !== groupB) return groupA.localeCompare(groupB);
+    return keyA.localeCompare(keyB);
+  });
+
+  let currentGroup = '';
+  for (const [key, value] of sortedEntries) {
+    const group = key.startsWith('LLM_') || key.startsWith('LMSTUDIO_') ||
+                  key.startsWith('OLLAMA_') || key.startsWith('OPENAI_') ||
+                  key.startsWith('ANTHROPIC_') ? 'LLM' :
+                  key.startsWith('EMBEDDING_') ? 'EMBEDDING' :
+                  key.startsWith('VECTOR_') || key.startsWith('QDRANT_') ? 'VECTOR' :
+                  key.startsWith('COLLECTOR_') ? 'COLLECTOR' : 'OTHER';
+
+    if (group !== currentGroup) {
+      envResult += `\n# ${group} Configuration\n`;
+      currentGroup = group;
+    }
+
+    envResult += `${key}='${sanitizeValue(String(value))}'\n`;
+  }
+
+  console.log(`[dumpENV] Writing ${envFilename} to: ${envPath}`);
+  console.log(`[dumpENV] NODE_ENV: ${process.env.NODE_ENV}`);
+  console.log(`[dumpENV] Saving ${Object.keys(frozenEnvs).length} environment variables`);
+
+  // Log embedding settings specifically for debugging
+  if (frozenEnvs.EMBEDDING_ENGINE || frozenEnvs.EMBEDDING_MODEL_PREF) {
+    console.log(`[dumpENV] Embedding settings - Engine: ${frozenEnvs.EMBEDDING_ENGINE}, Model: ${frozenEnvs.EMBEDDING_MODEL_PREF}`);
+  }
+
   fs.writeFileSync(envPath, envResult, { encoding: "utf8", flag: "w" });
+  console.log(`[dumpENV] Successfully wrote ${envFilename} with all settings preserved`);
   return true;
 }
 

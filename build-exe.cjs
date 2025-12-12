@@ -517,6 +517,31 @@ echo Creating .env file...
     echo LMSTUDIO_MODEL_PREF='Loaded from Chat UI'
     echo LMSTUDIO_MODEL_TOKEN_LIMIT=4096
     echo.
+    echo ###########################################
+    echo ######## EMBEDDING API SELECTION #########
+    echo ###########################################
+    echo # LMStudio is pre-configured for embeddings
+    echo # This uses the same LMStudio instance as above
+    echo.
+    echo EMBEDDING_ENGINE='lmstudio'
+    echo EMBEDDING_BASE_PATH='http://localhost:1234/v1'
+    echo EMBEDDING_MODEL_MAX_CHUNK_LENGTH='8192'
+    echo EMBEDDING_MODEL_PREF='text-embedding-nomic-embed-text-v1.5'
+    echo.
+    echo # Alternative embedding providers:
+    echo.
+    echo # EMBEDDING_ENGINE='native'
+    echo # # Uses built-in AnythingLLM embeddings ^(no configuration needed^)
+    echo.
+    echo # EMBEDDING_ENGINE='openai'
+    echo # OPEN_AI_KEY=sk-your-api-key-here
+    echo # EMBEDDING_MODEL_PREF='text-embedding-3-small'
+    echo.
+    echo # See server.env.example for all embedding providers
+    echo.
+    echo ###########################################
+    echo ######## LLM ALTERNATIVE PROVIDERS #######
+    echo ###########################################
     echo # Alternative providers ^(comment LMStudio above and uncomment below^):
     echo.
     echo # LLM_PROVIDER='openai'
