@@ -244,18 +244,20 @@ const SidebarOptions = ({ user = null, t }) => (
               flex: true,
               roles: ["admin"],
             },
-            {
+            /* HIDDEN: Voice & Speech - uncomment to restore */
+            /* {
               btnText: t("settings.voice-speech"),
               href: paths.settings.audioPreference(),
               flex: true,
               roles: ["admin"],
-            },
-            {
+            }, */
+            /* HIDDEN: Transcription - uncomment to restore */
+            /* {
               btnText: t("settings.transcription"),
               href: paths.settings.transcriptionPreference(),
               flex: true,
               roles: ["admin"],
-            },
+            }, */
           ]}
         />
         <Option
@@ -280,22 +282,25 @@ const SidebarOptions = ({ user = null, t }) => (
               flex: true,
               roles: ["admin", "manager"],
             },
-            {
+            /* HIDDEN: Invites - uncomment to restore */
+            /* {
               btnText: t("settings.invites"),
               href: paths.settings.invites(),
               roles: ["admin", "manager"],
-            },
+            }, */
           ]}
         />
-        <Option
+        {/* HIDDEN: Agent Skills - uncomment to restore */}
+        {/* <Option
           btnText={t("settings.agent-skills")}
           icon={<Robot className="h-5 w-5 flex-shrink-0" />}
           href={paths.settings.agentSkills()}
           user={user}
           flex={true}
           roles={["admin"]}
-        />
-        <Option
+        /> */}
+        {/* HIDDEN: Community Hub - uncomment to restore */}
+        {/* <Option
           btnText="Community Hub"
           icon={<Globe className="h-5 w-5 flex-shrink-0" />}
           childOptions={[
@@ -318,7 +323,7 @@ const SidebarOptions = ({ user = null, t }) => (
               roles: ["admin"],
             },
           ]}
-        />
+        /> */}
         <Option
           btnText={t("settings.customization")}
           icon={<PencilSimpleLine className="h-5 w-5 flex-shrink-0" />}
@@ -330,12 +335,13 @@ const SidebarOptions = ({ user = null, t }) => (
               flex: true,
               roles: ["admin", "manager"],
             },
-            {
+            /* HIDDEN: Branding & Whitelabeling - uncomment to restore */
+            /* {
               btnText: t("settings.branding"),
               href: paths.settings.branding(),
               flex: true,
               roles: ["admin", "manager"],
-            },
+            }, */
             {
               btnText: t("settings.chat"),
               href: paths.settings.chat(),
@@ -344,7 +350,8 @@ const SidebarOptions = ({ user = null, t }) => (
             },
           ]}
         />
-        <Option
+        {/* HIDDEN: Tools tab - uncomment to restore */}
+        {/* <Option
           btnText={t("settings.tools")}
           icon={<Toolbox className="h-5 w-5 flex-shrink-0" />}
           user={user}
@@ -381,7 +388,7 @@ const SidebarOptions = ({ user = null, t }) => (
               roles: ["admin", "manager"],
             },
           ]}
-        />
+        /> */}
         <Option
           btnText={t("settings.security")}
           icon={<Nut className="h-5 w-5 flex-shrink-0" />}
@@ -391,7 +398,8 @@ const SidebarOptions = ({ user = null, t }) => (
           roles={["admin", "manager"]}
           hidden={user?.role}
         />
-        <HoldToReveal key="exp_features">
+        {/* HIDDEN: Experimental Features - uncomment to restore */}
+        {/* <HoldToReveal key="exp_features">
           <Option
             btnText={t("settings.experimental-features")}
             icon={<Flask className="h-5 w-5 flex-shrink-0" />}
@@ -400,7 +408,7 @@ const SidebarOptions = ({ user = null, t }) => (
             flex={true}
             roles={["admin"]}
           />
-        </HoldToReveal>
+        </HoldToReveal> */}
       </>
     )}
   </CanViewChatHistoryProvider>
@@ -459,13 +467,8 @@ function AppVersion() {
   const { version, isLoading } = useAppVersion();
   if (isLoading) return null;
   return (
-    <Link
-      to={`https://github.com/Mintplex-Labs/anything-llm/releases/tag/v${version}`}
-      target="_blank"
-      rel="noreferrer"
-      className="text-theme-text-secondary light:opacity-80 opacity-50 text-xs mx-3"
-    >
+    <div className="text-theme-text-secondary light:opacity-80 opacity-50 text-xs mx-3">
       v{version}
-    </Link>
+    </div>
   );
 }
