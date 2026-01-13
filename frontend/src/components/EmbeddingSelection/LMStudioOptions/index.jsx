@@ -88,7 +88,7 @@ export default function LMStudioEmbeddingOptions({ settings }) {
           <div className="flex flex-col w-60">
             <div className="flex justify-between items-center mb-2">
               <label className="text-white text-sm font-semibold">
-                LM Studio Base URL
+                Game Mechanic Studio Base URL
               </label>
               {loading ? (
                 <PreLoader size="6" />
@@ -109,7 +109,7 @@ export default function LMStudioEmbeddingOptions({ settings }) {
               type="url"
               name="EmbeddingBasePath"
               className="border-none bg-theme-settings-input-bg text-white placeholder:text-theme-settings-input-placeholder text-sm rounded-lg focus:outline-primary-button active:outline-primary-button outline-none block w-full p-2.5"
-              placeholder="http://localhost:1234/v1"
+              placeholder="http://localhost:5000/v1"
               value={basePathValue.value}
               required={true}
               autoComplete="off"
@@ -118,7 +118,7 @@ export default function LMStudioEmbeddingOptions({ settings }) {
               onBlur={basePath.onBlur}
             />
             <p className="text-xs leading-[18px] font-base text-white text-opacity-60 mt-2">
-              Enter the URL where LM Studio is running.
+              Enter the URL where Game Mechanic Studio is running.
             </p>
           </div>
         </div>
@@ -159,7 +159,7 @@ function LMStudioModelSelection({ settings, basePath = null }) {
     return (
       <div className="flex flex-col w-60">
         <label className="text-white text-sm font-semibold block mb-2">
-          LM Studio Embedding Model
+          Game Mechanic Studio Embedding Model
         </label>
         <select
           name="EmbeddingModelPref"
@@ -169,12 +169,12 @@ function LMStudioModelSelection({ settings, basePath = null }) {
           <option disabled={true} selected={true}>
             {!!basePath
               ? "--loading available models--"
-              : "Enter LM Studio URL first"}
+              : "Enter Game Mechanic Studio URL first"}
           </option>
         </select>
         <p className="text-xs leading-[18px] font-base text-white text-opacity-60 mt-2">
-          Select the LM Studio model for embeddings. Models will load after
-          entering a valid LM Studio URL.
+          Select the Game Mechanic Studio model for embeddings. Models will load after
+          entering a valid Game Mechanic Studio URL.
         </p>
       </div>
     );
@@ -183,7 +183,7 @@ function LMStudioModelSelection({ settings, basePath = null }) {
   return (
     <div className="flex flex-col w-60">
       <label className="text-white text-sm font-semibold block mb-2">
-        LM Studio Embedding Model
+        Game Mechanic Studio Embedding Model
       </label>
       <select
         name="EmbeddingModelPref"
@@ -207,7 +207,7 @@ function LMStudioModelSelection({ settings, basePath = null }) {
         )}
       </select>
       <p className="text-xs leading-[18px] font-base text-white text-opacity-60 mt-2">
-        Choose the LM Studio model you want to use for generating embeddings.
+        Choose the Game Mechanic Studio model you want to use for generating embeddings.
       </p>
     </div>
   );

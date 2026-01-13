@@ -39,86 +39,97 @@ import { useTranslation } from "react-i18next";
 import MistralAiOptions from "@/components/EmbeddingSelection/MistralAiOptions";
 
 const EMBEDDERS = [
-  {
+  /* AnythingLLM Embedder hidden from dropdown */
+  /* {
     name: "AnythingLLM Embedder",
     value: "native",
     logo: AnythingLLMIcon,
     options: (settings) => <NativeEmbeddingOptions settings={settings} />,
     description:
       "Use the built-in embedding provider for AnythingLLM. Zero setup!",
-  },
-  {
+  }, */
+  /* OpenAI hidden from dropdown */
+  /* {
     name: "OpenAI",
     value: "openai",
     logo: OpenAiLogo,
     options: (settings) => <OpenAiOptions settings={settings} />,
     description: "The standard option for most non-commercial use.",
-  },
-  {
+  }, */
+  /* Azure OpenAI hidden from dropdown */
+  /* {
     name: "Azure OpenAI",
     value: "azure",
     logo: AzureOpenAiLogo,
     options: (settings) => <AzureAiOptions settings={settings} />,
     description: "The enterprise option of OpenAI hosted on Azure services.",
-  },
-  {
+  }, */
+  /* Gemini hidden from dropdown */
+  /* {
     name: "Gemini",
     value: "gemini",
     logo: GeminiAiLogo,
     options: (settings) => <GeminiOptions settings={settings} />,
     description: "Run powerful embedding models from Google AI.",
-  },
-  {
+  }, */
+  /* Local AI hidden from dropdown */
+  /* {
     name: "Local AI",
     value: "localai",
     logo: LocalAiLogo,
     options: (settings) => <LocalAiOptions settings={settings} />,
     description: "Run embedding models locally on your own machine.",
-  },
-  {
+  }, */
+  /* Ollama hidden from dropdown */
+  /* {
     name: "Ollama",
     value: "ollama",
     logo: OllamaLogo,
     options: (settings) => <OllamaEmbeddingOptions settings={settings} />,
     description: "Run embedding models locally on your own machine.",
-  },
+  }, */
   {
-    name: "LM Studio",
+    name: "Game Mechanic Studio",
     value: "lmstudio",
     logo: LMStudioLogo,
     options: (settings) => <LMStudioEmbeddingOptions settings={settings} />,
     description:
       "Discover, download, and run thousands of cutting edge LLMs in a few clicks.",
   },
-  {
+  /* Cohere hidden from dropdown */
+  /* {
     name: "Cohere",
     value: "cohere",
     logo: CohereLogo,
     options: (settings) => <CohereEmbeddingOptions settings={settings} />,
     description: "Run powerful embedding models from Cohere.",
-  },
-  {
+  }, */
+  /* Voyage AI hidden from dropdown */
+  /* {
     name: "Voyage AI",
     value: "voyageai",
     logo: VoyageAiLogo,
     options: (settings) => <VoyageAiOptions settings={settings} />,
     description: "Run powerful embedding models from Voyage AI.",
-  },
-  {
+  }, */
+  /* LiteLLM hidden from dropdown */
+  /* {
     name: "LiteLLM",
     value: "litellm",
     logo: LiteLLMLogo,
     options: (settings) => <LiteLLMOptions settings={settings} />,
     description: "Run powerful embedding models from LiteLLM.",
-  },
-  {
+  }, */
+  /* Mistral AI hidden from dropdown */
+  /* {
     name: "Mistral AI",
     value: "mistral",
     logo: MistralAiLogo,
     options: (settings) => <MistralAiOptions settings={settings} />,
     description: "Run powerful embedding models from Mistral AI.",
-  },
-  {
+  }, */
+  /* Generic OpenAI hidden from dropdown */
+  /* {
     name: "Generic OpenAI",
     value: "generic-openai",
     logo: GenericOpenAiLogo,
@@ -126,7 +137,7 @@ const EMBEDDERS = [
       <GenericOpenAiEmbeddingOptions settings={settings} />
     ),
     description: "Run embedding models from any OpenAI compatible API service.",
-  },
+  }, */
 ];
 
 export default function GeneralEmbeddingPreference() {

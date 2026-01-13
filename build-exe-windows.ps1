@@ -225,10 +225,10 @@ echo Creating .env file...
     echo ######## LLM API SELECTION ###############
     echo ###########################################
     echo # LMStudio is pre-configured for local LLM usage
-    echo # Make sure LMStudio is running on port 1234
+    echo # Make sure LMStudio is running on port 5000
     echo.
     echo LLM_PROVIDER='lmstudio'
-    echo LMSTUDIO_BASE_PATH='http://localhost:1234/v1'
+    echo LMSTUDIO_BASE_PATH='http://localhost:5000/v1'
     echo LMSTUDIO_MODEL_PREF='Loaded from Chat UI'
     echo LMSTUDIO_MODEL_TOKEN_LIMIT=4096
     echo.
@@ -238,7 +238,7 @@ echo Creating .env file...
     echo # LMStudio is pre-configured for embeddings
     echo.
     echo EMBEDDING_ENGINE='lmstudio'
-    echo EMBEDDING_BASE_PATH='http://localhost:1234/v1'
+    echo EMBEDDING_BASE_PATH='http://localhost:5000/v1'
     echo EMBEDDING_MODEL_MAX_CHUNK_LENGTH='8192'
     echo EMBEDDING_MODEL_PREF='text-embedding-nomic-embed-text-v1.5'
     echo.

@@ -51,14 +51,14 @@ The `setup.bat` generates a `.env` file with LMStudio **enabled by default**:
 
 ```env
 LLM_PROVIDER='lmstudio'
-LMSTUDIO_BASE_PATH='http://localhost:1234/v1'
+LMSTUDIO_BASE_PATH='http://localhost:5000/v1'
 LMSTUDIO_MODEL_PREF='Loaded from Chat UI'
 LMSTUDIO_MODEL_TOKEN_LIMIT=4096
 ```
 
 ### Requirements
 
-1. **LMStudio must be running** on port 1234
+1. **LMStudio must be running** on port 5000
 2. **A model must be loaded** in LMStudio before starting the server
 3. The model should be accessible via the LMStudio API endpoint
 
@@ -137,7 +137,7 @@ This will:
 
 1. Launch LMStudio
 2. Load your preferred model
-3. Ensure the server is running on port 1234
+3. Ensure the server is running on port 5000
 4. Verify the endpoint is accessible
 
 ### Step 3: Launch Application
@@ -192,9 +192,9 @@ You should see the GameMechanicLLM interface.
 - Run init-database.bat for a fresh database
 
 **Error: LMStudio connection failed**
-- Verify LMStudio is running on port 1234
+- Verify LMStudio is running on port 5000
 - Check the model is loaded
-- Test the endpoint: `curl http://localhost:1234/v1/models`
+- Test the endpoint: `curl http://localhost:5000/v1/models`
 
 **Error: Frontend shows "Not Found"**
 - This issue has been fixed in the current build
@@ -234,7 +234,7 @@ Edit `build-exe.cjs` around line 398:
 
 ```javascript
 echo LLM_PROVIDER='lmstudio'
-echo LMSTUDIO_BASE_PATH='http://localhost:1234/v1'
+echo LMSTUDIO_BASE_PATH='http://localhost:5000/v1'
 echo LMSTUDIO_MODEL_PREF='Loaded from Chat UI'
 echo LMSTUDIO_MODEL_TOKEN_LIMIT=4096
 ```

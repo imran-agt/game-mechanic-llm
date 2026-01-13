@@ -111,52 +111,58 @@ export default function GeneralVectorDatabase() {
   }, [searchQuery, selectedVDB]);
 
   const VECTOR_DBS = [
-    {
+    /* LanceDB hidden from dropdown */
+    /* {
       name: "LanceDB",
       value: "lancedb",
       logo: LanceDbLogo,
       options: <LanceDBOptions />,
       description:
         "100% local vector DB that runs on the same instance as AnythingLLM.",
-    },
-    {
+    }, */
+    /* PGVector hidden from dropdown */
+    /* {
       name: "PGVector",
       value: "pgvector",
       logo: PGVectorLogo,
       options: <PGVectorOptions settings={settings} />,
       description: "Vector search powered by PostgreSQL.",
-    },
-    {
+    }, */
+    /* Chroma hidden from dropdown */
+    /* {
       name: "Chroma",
       value: "chroma",
       logo: ChromaLogo,
       options: <ChromaDBOptions settings={settings} />,
       description:
         "Open source vector database you can host yourself or on the cloud.",
-    },
-    {
+    }, */
+    /* Chroma Cloud hidden from dropdown */
+    /* {
       name: "Chroma Cloud",
       value: "chromacloud",
       logo: ChromaLogo,
       options: <ChromaCloudOptions settings={settings} />,
       description:
         "Fully managed Chroma cloud service with enterprise features and support.",
-    },
-    {
+    }, */
+    /* Pinecone hidden from dropdown */
+    /* {
       name: "Pinecone",
       value: "pinecone",
       logo: PineconeLogo,
       options: <PineconeDBOptions settings={settings} />,
       description: "100% cloud-based vector database for enterprise use cases.",
-    },
-    {
+    }, */
+    /* Zilliz Cloud hidden from dropdown */
+    /* {
       name: "Zilliz Cloud",
       value: "zilliz",
       logo: ZillizLogo,
       options: <ZillizCloudOptions settings={settings} />,
       description:
         "Cloud hosted vector database built for enterprise with SOC 2 compliance.",
-    },
+    }, */
     {
       name: "QDrant",
       value: "qdrant",
@@ -164,28 +170,31 @@ export default function GeneralVectorDatabase() {
       options: <QDrantDBOptions settings={settings} />,
       description: "Open source local and distributed cloud vector database.",
     },
-    {
+    /* Weaviate hidden from dropdown */
+    /* {
       name: "Weaviate",
       value: "weaviate",
       logo: WeaviateLogo,
       options: <WeaviateDBOptions settings={settings} />,
       description:
         "Open source local and cloud hosted multi-modal vector database.",
-    },
-    {
+    }, */
+    /* Milvus hidden from dropdown */
+    /* {
       name: "Milvus",
       value: "milvus",
       logo: MilvusLogo,
       options: <MilvusDBOptions settings={settings} />,
       description: "Open-source, highly scalable, and blazing fast.",
-    },
-    {
+    }, */
+    /* AstraDB hidden from dropdown */
+    /* {
       name: "AstraDB",
       value: "astra",
       logo: AstraDBLogo,
       options: <AstraDBOptions settings={settings} />,
       description: "Vector Search for Real-world GenAI.",
-    },
+    }, */
   ];
 
   const selectedVDBObject = VECTOR_DBS.find((vdb) => vdb.value === selectedVDB);
