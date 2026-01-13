@@ -72,15 +72,22 @@ if not exist "node_modules" (
     bun install
 )
 
-:: Generate Prisma
-echo Generating Prisma client...
-bun node_modules/prisma/build/index.js generate
-if %ERRORLEVEL% NEQ 0 (
-    echo [ERROR] Prisma generation failed
-    cd ..
-    exit /b 1
+:: Generate Prisma (skip if already exists to avoid hanging)
+if exist "node_modules\.prisma\client\index.js" (
+    echo [OK] Prisma client already exists, skipping generation
+) else (
+    echo Generating Prisma client...
+    :: Disable update check and telemetry to prevent hanging
+    set PRISMA_HIDE_UPDATE_MESSAGE=true
+    set CHECKPOINT_DISABLE=1
+    bun node_modules/prisma/build/index.js generate
+    if %ERRORLEVEL% NEQ 0 (
+        echo [ERROR] Prisma generation failed
+        cd ..
+        exit /b 1
+    )
+    echo [OK] Prisma client generated
 )
-echo [OK] Prisma client generated
 
 :: Build server
 echo Building server executable...

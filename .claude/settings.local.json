@@ -21,7 +21,8 @@
       "Bash(sudo rm:*)",
       "Bash(npm run build:exe:*)",
       "Bash(tee:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(node --version:*)"
     ],
     "deny": [],
     "ask": []
