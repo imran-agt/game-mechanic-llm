@@ -87,7 +87,7 @@ async function validateTablePragmas(force = false) {
 async function setupTelemetry() {
   if (process.env.DISABLE_TELEMETRY === "true") {
     console.log(
-      `\x1b[31m[TELEMETRY DISABLED]\x1b[0m Telemetry is marked as disabled - no events will send. Telemetry helps Mintplex Labs Inc improve AnythingLLM.`
+      `\x1b[31m[TELEMETRY DISABLED]\x1b[0m Telemetry is disabled`
     );
     return true;
   }

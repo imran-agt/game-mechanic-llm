@@ -35,7 +35,7 @@ export default function LMStudioOptions({ settings, showAlert = false }) {
           <div className="gap-x-2 flex items-center">
             <Info size={12} className="hidden md:visible" />
             <p className="text-sm md:text-base">
-              LMStudio as your LLM requires you to set an embedding service to
+              Game Mechanic Studio as your LLM requires you to set an embedding service to
               use.
             </p>
           </div>
@@ -72,7 +72,7 @@ export default function LMStudioOptions({ settings, showAlert = false }) {
           <div className="flex flex-col w-60">
             <div className="flex justify-between items-center mb-2">
               <label className="text-white text-sm font-semibold">
-                LM Studio Base URL
+                Game Mechanic Studio Base URL
               </label>
               {loading ? (
                 <PreLoader size="6" />
@@ -93,7 +93,7 @@ export default function LMStudioOptions({ settings, showAlert = false }) {
               type="url"
               name="LMStudioBasePath"
               className="border-none bg-theme-settings-input-bg text-white placeholder:text-theme-settings-input-placeholder text-sm rounded-lg focus:outline-primary-button active:outline-primary-button outline-none block w-full p-2.5"
-              placeholder="http://localhost:1234/v1"
+              placeholder="http://localhost:5000/v1"
               value={basePathValue.value}
               required={true}
               autoComplete="off"
@@ -102,7 +102,7 @@ export default function LMStudioOptions({ settings, showAlert = false }) {
               onBlur={basePath.onBlur}
             />
             <p className="text-xs leading-[18px] font-base text-white text-opacity-60 mt-2">
-              Enter the URL where LM Studio is running.
+              Enter the URL where Game Mechanic Studio is running.
             </p>
           </div>
           <div className="flex flex-col w-60">
@@ -164,7 +164,7 @@ function LMStudioModelSelection({ settings, basePath = null }) {
     return (
       <div className="flex flex-col w-60">
         <label className="text-white text-sm font-semibold block mb-2">
-          LM Studio Model
+          Game Mechanic Studio Model
         </label>
         <select
           name="LMStudioModelPref"
@@ -174,12 +174,12 @@ function LMStudioModelSelection({ settings, basePath = null }) {
           <option disabled={true} selected={true}>
             {!!basePath
               ? "--loading available models--"
-              : "Enter LM Studio URL first"}
+              : "Enter Game Mechanic Studio URL first"}
           </option>
         </select>
         <p className="text-xs leading-[18px] font-base text-white text-opacity-60 mt-2">
-          Select the LM Studio model you want to use. Models will load after
-          entering a valid LM Studio URL.
+          Select the Game Mechanic Studio model you want to use. Models will load after
+          entering a valid Game Mechanic Studio URL.
         </p>
       </div>
     );
@@ -188,7 +188,7 @@ function LMStudioModelSelection({ settings, basePath = null }) {
   return (
     <div className="flex flex-col w-60">
       <label className="text-white text-sm font-semibold block mb-2">
-        LM Studio Model
+        Game Mechanic Studio Model
       </label>
       <select
         name="LMStudioModelPref"
@@ -212,7 +212,7 @@ function LMStudioModelSelection({ settings, basePath = null }) {
         )}
       </select>
       <p className="text-xs leading-[18px] font-base text-white text-opacity-60 mt-2">
-        Choose the LM Studio model you want to use for your conversations.
+        Choose the Game Mechanic Studio model you want to use for your conversations.
       </p>
     </div>
   );

@@ -22,7 +22,8 @@
       "Bash(npm run build:exe:*)",
       "Bash(tee:*)",
       "Bash(grep:*)",
-      "Bash(node --version:*)"
+      "Bash(node --version:*)",
+      "Bash(npx eslint:*)"
     ],
     "deny": [],
     "ask": []

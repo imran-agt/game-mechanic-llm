@@ -73,22 +73,24 @@ import { CaretUpDown, MagnifyingGlass, X } from "@phosphor-icons/react";
 import CTAButton from "@/components/lib/CTAButton";
 
 export const AVAILABLE_LLM_PROVIDERS = [
-  {
+  /* OpenAI hidden from dropdown */
+  /* {
     name: "OpenAI",
     value: "openai",
     logo: OpenAiLogo,
     options: (settings) => <OpenAiOptions settings={settings} />,
     description: "The standard option for most non-commercial use.",
     requiredConfig: ["OpenAiKey"],
-  },
-  {
+  }, */
+  /* Azure OpenAI hidden from dropdown */
+  /* {
     name: "Azure OpenAI",
     value: "azure",
     logo: AzureOpenAiLogo,
     options: (settings) => <AzureAiOptions settings={settings} />,
     description: "The enterprise option of OpenAI hosted on Azure services.",
     requiredConfig: ["AzureOpenAiEndpoint"],
-  },
+  }, */
   {
     name: "Anthropic",
     value: "anthropic",
@@ -97,15 +99,17 @@ export const AVAILABLE_LLM_PROVIDERS = [
     description: "A friendly AI Assistant hosted by Anthropic.",
     requiredConfig: ["AnthropicApiKey"],
   },
-  {
+  /* Gemini hidden from dropdown */
+  /* {
     name: "Gemini",
     value: "gemini",
     logo: GeminiLogo,
     options: (settings) => <GeminiLLMOptions settings={settings} />,
     description: "Google's largest and most capable AI model",
     requiredConfig: ["GeminiLLMApiKey"],
-  },
-  {
+  }, */
+  /* NVIDIA NIM hidden from dropdown */
+  /* {
     name: "NVIDIA NIM",
     value: "nvidia-nim",
     logo: NvidiaNimLogo,
@@ -113,8 +117,9 @@ export const AVAILABLE_LLM_PROVIDERS = [
     description:
       "Run full parameter LLMs directly on your NVIDIA RTX GPU using NVIDIA NIM.",
     requiredConfig: ["NvidiaNimLLMBasePath"],
-  },
-  {
+  }, */
+  /* HuggingFace hidden from dropdown */
+  /* {
     name: "HuggingFace",
     value: "huggingface",
     logo: HuggingFaceLogo,
@@ -126,16 +131,18 @@ export const AVAILABLE_LLM_PROVIDERS = [
       "HuggingFaceLLMAccessToken",
       "HuggingFaceLLMTokenLimit",
     ],
-  },
-  {
+  }, */
+  /* Ollama hidden from dropdown */
+  /* {
     name: "Ollama",
     value: "ollama",
     logo: OllamaLogo,
     options: (settings) => <OllamaLLMOptions settings={settings} />,
     description: "Run LLMs locally on your own machine.",
     requiredConfig: ["OllamaLLMBasePath"],
-  },
-  {
+  }, */
+  /* Dell Pro AI Studio hidden from dropdown */
+  /* {
     name: "Dell Pro AI Studio",
     value: "dpais",
     logo: DellProAiStudioLogo,
@@ -147,33 +154,35 @@ export const AVAILABLE_LLM_PROVIDERS = [
       "DellProAiStudioModelPref",
       "DellProAiStudioTokenLimit",
     ],
-  },
+  }, */
   {
-    name: "LM Studio",
+    name: "Game Mechanic Studio",
     value: "lmstudio",
     logo: LMStudioLogo,
     options: (settings) => <LMStudioOptions settings={settings} />,
-    description:
-      "Discover, download, and run thousands of cutting edge LLMs in a few clicks.",
+    description: "AGT Inference Engine (Local)",
     requiredConfig: ["LMStudioBasePath"],
   },
-  {
+  /* Local AI hidden from dropdown */
+  /* {
     name: "Local AI",
     value: "localai",
     logo: LocalAiLogo,
     options: (settings) => <LocalAiOptions settings={settings} />,
     description: "Run LLMs locally on your own machine.",
     requiredConfig: ["LocalAiApiKey", "LocalAiBasePath", "LocalAiTokenLimit"],
-  },
-  {
+  }, */
+  /* Together AI hidden from dropdown */
+  /* {
     name: "Together AI",
     value: "togetherai",
     logo: TogetherAILogo,
     options: (settings) => <TogetherAiOptions settings={settings} />,
     description: "Run open source models from Together AI.",
     requiredConfig: ["TogetherAiApiKey"],
-  },
-  {
+  }, */
+  /* Fireworks AI hidden from dropdown */
+  /* {
     name: "Fireworks AI",
     value: "fireworksai",
     logo: FireworksAILogo,
@@ -181,16 +190,18 @@ export const AVAILABLE_LLM_PROVIDERS = [
     description:
       "The fastest and most efficient inference engine to build production-ready, compound AI systems.",
     requiredConfig: ["FireworksAiLLMApiKey"],
-  },
-  {
+  }, */
+  /* Mistral hidden from dropdown */
+  /* {
     name: "Mistral",
     value: "mistral",
     logo: MistralLogo,
     options: (settings) => <MistralOptions settings={settings} />,
     description: "Run open source models from Mistral AI.",
     requiredConfig: ["MistralApiKey"],
-  },
-  {
+  }, */
+  /* Perplexity AI hidden from dropdown */
+  /* {
     name: "Perplexity AI",
     value: "perplexity",
     logo: PerplexityLogo,
@@ -198,16 +209,18 @@ export const AVAILABLE_LLM_PROVIDERS = [
     description:
       "Run powerful and internet-connected models hosted by Perplexity AI.",
     requiredConfig: ["PerplexityApiKey"],
-  },
-  {
+  }, */
+  /* OpenRouter hidden from dropdown */
+  /* {
     name: "OpenRouter",
     value: "openrouter",
     logo: OpenRouterLogo,
     options: (settings) => <OpenRouterOptions settings={settings} />,
     description: "A unified interface for LLMs.",
     requiredConfig: ["OpenRouterApiKey"],
-  },
-  {
+  }, */
+  /* Groq hidden from dropdown */
+  /* {
     name: "Groq",
     value: "groq",
     logo: GroqLogo,
@@ -215,8 +228,9 @@ export const AVAILABLE_LLM_PROVIDERS = [
     description:
       "The fastest LLM inferencing available for real-time AI applications.",
     requiredConfig: ["GroqApiKey"],
-  },
-  {
+  }, */
+  /* KoboldCPP hidden from dropdown */
+  /* {
     name: "KoboldCPP",
     value: "koboldcpp",
     logo: KoboldCPPLogo,
@@ -227,40 +241,45 @@ export const AVAILABLE_LLM_PROVIDERS = [
       "KoboldCPPBasePath",
       "KoboldCPPTokenLimit",
     ],
-  },
-  {
+  }, */
+  /* Oobabooga Web UI hidden from dropdown */
+  /* {
     name: "Oobabooga Web UI",
     value: "textgenwebui",
     logo: TextGenWebUILogo,
     options: (settings) => <TextGenWebUIOptions settings={settings} />,
     description: "Run local LLMs using Oobabooga's Text Generation Web UI.",
     requiredConfig: ["TextGenWebUIBasePath", "TextGenWebUITokenLimit"],
-  },
-  {
+  }, */
+  /* Cohere hidden from dropdown */
+  /* {
     name: "Cohere",
     value: "cohere",
     logo: CohereLogo,
     options: (settings) => <CohereAiOptions settings={settings} />,
     description: "Run Cohere's powerful Command models.",
     requiredConfig: ["CohereApiKey"],
-  },
-  {
+  }, */
+  /* LiteLLM hidden from dropdown */
+  /* {
     name: "LiteLLM",
     value: "litellm",
     logo: LiteLLMLogo,
     options: (settings) => <LiteLLMOptions settings={settings} />,
     description: "Run LiteLLM's OpenAI compatible proxy for various LLMs.",
     requiredConfig: ["LiteLLMBasePath"],
-  },
-  {
+  }, */
+  /* DeepSeek hidden from dropdown */
+  /* {
     name: "DeepSeek",
     value: "deepseek",
     logo: DeepSeekLogo,
     options: (settings) => <DeepSeekOptions settings={settings} />,
     description: "Run DeepSeek's powerful LLMs.",
     requiredConfig: ["DeepSeekApiKey"],
-  },
-  {
+  }, */
+  /* PPIO hidden from dropdown */
+  /* {
     name: "PPIO",
     value: "ppio",
     logo: PPIOLogo,
@@ -268,8 +287,9 @@ export const AVAILABLE_LLM_PROVIDERS = [
     description:
       "Run stable and cost-efficient open-source LLM APIs, such as DeepSeek, Llama, Qwen etc.",
     requiredConfig: ["PPIOApiKey"],
-  },
-  {
+  }, */
+  /* AWS Bedrock hidden from dropdown */
+  /* {
     name: "AWS Bedrock",
     value: "bedrock",
     logo: AWSBedrockLogo,
@@ -281,24 +301,27 @@ export const AVAILABLE_LLM_PROVIDERS = [
       "AwsBedrockLLMRegion",
       "AwsBedrockLLMModel",
     ],
-  },
-  {
+  }, */
+  /* APIpie hidden from dropdown */
+  /* {
     name: "APIpie",
     value: "apipie",
     logo: APIPieLogo,
     options: (settings) => <ApiPieLLMOptions settings={settings} />,
     description: "A unified API of AI services from leading providers",
     requiredConfig: ["ApipieLLMApiKey", "ApipieLLMModelPref"],
-  },
-  {
+  }, */
+  /* Moonshot AI hidden from dropdown */
+  /* {
     name: "Moonshot AI",
     value: "moonshotai",
     logo: MoonshotAiLogo,
     options: (settings) => <MoonshotAiOptions settings={settings} />,
     description: "Run Moonshot AI's powerful LLMs.",
     requiredConfig: ["MoonshotAiApiKey"],
-  },
-  {
+  }, */
+  /* Novita AI hidden from dropdown */
+  /* {
     name: "Novita AI",
     value: "novita",
     logo: NovitaLogo,
@@ -306,16 +329,18 @@ export const AVAILABLE_LLM_PROVIDERS = [
     description:
       "Reliable, Scalable, and Cost-Effective for LLMs from Novita AI",
     requiredConfig: ["NovitaLLMApiKey"],
-  },
-  {
+  }, */
+  /* CometAPI hidden from dropdown */
+  /* {
     name: "CometAPI",
     value: "cometapi",
     logo: CometApiLogo,
     options: (settings) => <CometApiLLMOptions settings={settings} />,
     description: "500+ AI Models all in one API.",
     requiredConfig: ["CometApiLLMApiKey"],
-  },
-  {
+  }, */
+  /* Microsoft Foundry Local hidden from dropdown */
+  /* {
     name: "Microsoft Foundry Local",
     value: "foundry",
     logo: FoundryLogo,
@@ -326,16 +351,18 @@ export const AVAILABLE_LLM_PROVIDERS = [
       "FoundryModelPref",
       "FoundryModelTokenLimit",
     ],
-  },
-  {
+  }, */
+  /* xAI hidden from dropdown */
+  /* {
     name: "xAI",
     value: "xai",
     logo: XAILogo,
     options: (settings) => <XAILLMOptions settings={settings} />,
     description: "Run xAI's powerful LLMs like Grok-2 and more.",
     requiredConfig: ["XAIApiKey", "XAIModelPref"],
-  },
-  {
+  }, */
+  /* Generic OpenAI hidden from dropdown */
+  /* {
     name: "Generic OpenAI",
     value: "generic-openai",
     logo: GenericOpenAiLogo,
@@ -348,7 +375,7 @@ export const AVAILABLE_LLM_PROVIDERS = [
       "GenericOpenAiTokenLimit",
       "GenericOpenAiKey",
     ],
-  },
+  }, */
 ];
 
 export default function GeneralLLMPreference() {
