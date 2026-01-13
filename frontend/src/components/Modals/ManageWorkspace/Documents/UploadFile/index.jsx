@@ -130,7 +130,8 @@ export default function UploadFile({
           </div>
         )}
       </div>
-      <div className="text-center text-white text-opacity-50 text-xs font-medium w-[560px] py-2">
+      {/* "or submit a link" text and form hidden */}
+      {/* <div className="text-center text-white text-opacity-50 text-xs font-medium w-[560px] py-2">
         {t("connectors.upload.or-submit-link")}
       </div>
       <form onSubmit={handleSendLink} className="flex gap-x-2">
@@ -151,7 +152,7 @@ export default function UploadFile({
             ? t("connectors.upload.fetching")
             : t("connectors.upload.fetch-website")}
         </button>
-      </form>
+      </form> */}
       <div className="mt-6 text-center text-white text-opacity-80 text-xs font-medium w-[560px]">
         {t("connectors.upload.privacy-notice")}
       </div>
