@@ -180,18 +180,35 @@ ${colors.bright}${colors.cyan}╔═══════════════�
     );
   }
 
-  // Generate Prisma client
-  // Use local Prisma installation to avoid bunx compatibility issues
-  const prismaPath = path.join(config.serverDir, 'node_modules', '.bin', 'prisma');
-  const prismaCommand = fs.existsSync(prismaPath)
-    ? `${config.bunPath} ${prismaPath} generate`
-    : `${config.bunPath} x prisma generate`;
+  // Generate Prisma client (skip if already exists to avoid hanging)
+  const prismaClientPath = path.join(config.serverDir, 'node_modules', '.prisma', 'client', 'index.js');
 
-  runCommand(
-    prismaCommand,
-    config.serverDir,
-    'Generating Prisma client'
-  );
+  if (fs.existsSync(prismaClientPath)) {
+    log.success('Prisma client already exists, skipping generation');
+  } else {
+    log.info('Generating Prisma client...');
+
+    // Disable update check and telemetry to prevent hanging
+    process.env.PRISMA_HIDE_UPDATE_MESSAGE = 'true';
+    process.env.CHECKPOINT_DISABLE = '1';
+
+    // Use local Prisma installation to avoid bunx compatibility issues
+    const prismaPath = path.join(config.serverDir, 'node_modules', '.bin', 'prisma');
+    const prismaCommand = fs.existsSync(prismaPath)
+      ? `${config.bunPath} ${prismaPath} generate`
+      : `${config.bunPath} x prisma generate`;
+
+    const prismaSuccess = runCommand(
+      prismaCommand,
+      config.serverDir,
+      'Generating Prisma client'
+    );
+
+    if (!prismaSuccess) {
+      log.error('Prisma generation failed. Aborting.');
+      process.exit(1);
+    }
+  }
 
   // Build server executable
   const iconPath = path.join(__dirname, 'frontend', 'src', 'media', 'logo', 'workspace.ico');
