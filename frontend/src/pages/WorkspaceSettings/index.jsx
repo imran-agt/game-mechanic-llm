@@ -114,6 +114,7 @@ function ShowWorkspaceChat() {
             title={t("workspaces—settings.agent")}
             icon={<Robot className="h-6 w-6" />}
             to={paths.workspace.settings.agentConfig(slug)}
+            visible={false}
           />
         </div>
         <div className="px-16 py-6">
