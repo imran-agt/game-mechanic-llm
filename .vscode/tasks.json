@@ -119,6 +119,37 @@
       },
       "label": "Build Windows EXE",
       "problemMatcher": []
+    },
+    {
+      "type": "process",
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "statusbar": {
+          "color": "#00bfff",
+          "detail": "Build Native Windows EXE with icon embedding",
+          "label": "$(rocket) Native EXE",
+          "running": {
+            "color": "#ff9900",
+            "label": "$(sync~spin) Building Native EXE..."
+          }
+        }
+      },
+      "command": "powershell.exe",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\build-exe-windows.ps1"],
+      "runOptions": {
+        "instanceLimit": 1,
+        "reevaluateOnRerun": true
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "dedicated",
+        "showReuseMessage": false,
+        "clear": true
+      },
+      "label": "Native EXE",
+      "problemMatcher": []
     }
   ]
 }

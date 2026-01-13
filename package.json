@@ -32,7 +32,8 @@
     "build:exe": "node build-exe.cjs",
     "build:exe:frontend": "cd frontend && bun install && bun run build",
     "build:exe:server": "cd server && bun install && npx prisma generate && bun build --compile --target=bun-windows-x64 --minify --sourcemap --external mock-aws-s3 --external aws-sdk --external nock ./index.js --outfile ../dist/gamemechanic-server.exe",
-    "build:exe:collector": "cd collector && bun install && bun build --compile --target=bun-windows-x64 --minify --sourcemap --external typescript ./index.js --outfile ../dist/gamemechanic-collector.exe"
+    "build:exe:collector": "cd collector && bun install && bun build --compile --target=bun-windows-x64 --minify --sourcemap --external typescript ./index.js --outfile ../dist/gamemechanic-collector.exe",
+    "embed-icons": "node embed-icons.js"
   },
   "private": false,
   "devDependencies": {

@@ -86,6 +86,24 @@ function checkBunInstalled() {
   }
 }
 
+function isWindows() {
+  return process.platform === 'win32';
+}
+
+/**
+ * Note: Icon embedding using --windows-icon flag
+ *
+ * This script conditionally includes the --windows-icon flag for both executables.
+ * Icon path: frontend/src/media/logo/workspace.ico
+ *
+ * Behavior:
+ * - When building ON Windows: The --windows-icon flag is used and the icon is embedded
+ * - When cross-compiling (Linux/WSL -> Windows): The flag is skipped (not supported by Bun)
+ *
+ * The build will succeed in both scenarios, but icon embedding only works when
+ * running the build script directly on Windows.
+ */
+
 // Main build process
 async function build() {
   console.log(`
@@ -163,15 +181,28 @@ ${colors.bright}${colors.cyan}╔═══════════════�
   }
 
   // Generate Prisma client
+  // Use local Prisma installation to avoid bunx compatibility issues
+  const prismaPath = path.join(config.serverDir, 'node_modules', '.bin', 'prisma');
+  const prismaCommand = fs.existsSync(prismaPath)
+    ? `${config.bunPath} ${prismaPath} generate`
+    : `${config.bunPath} x prisma generate`;
+
   runCommand(
-    'npx prisma generate',
+    prismaCommand,
     config.serverDir,
     'Generating Prisma client'
   );
 
   // Build server executable
+  const iconPath = path.join(__dirname, 'frontend', 'src', 'media', 'logo', 'workspace.ico');
+  const serverExePath = path.join(config.distDir, 'gamemechanic-server.exe');
+
+  // Build command with conditional icon flag
+  const iconFlag = isWindows() ? `--windows-icon="${iconPath}"` : '';
+  const serverBuildCommand = `${config.bunPath} build --compile --target=bun-windows-x64 --minify --sourcemap ${iconFlag} --external mock-aws-s3 --external aws-sdk --external nock ./index.js --outfile ${serverExePath}`.replace(/\s+/g, ' ').trim();
+
   const serverBuildSuccess = runCommand(
-    `${config.bunPath} build --compile --target=bun-windows-x64 --minify --sourcemap --external mock-aws-s3 --external aws-sdk --external nock ./index.js --outfile ${path.join(config.distDir, 'gamemechanic-server.exe')}`,
+    serverBuildCommand,
     config.serverDir,
     'Compiling server to Windows EXE'
   );
@@ -179,6 +210,13 @@ ${colors.bright}${colors.cyan}╔═══════════════�
   if (!serverBuildSuccess) {
     log.error('Server build failed. Aborting.');
     process.exit(1);
+  }
+
+  // Note: Icon embedding status
+  if (isWindows()) {
+    log.success('Icon embedded via --windows-icon flag');
+  } else {
+    log.warning('Icon embedding skipped (only available when building on Windows)');
   }
 
   // Step 5: Install collector dependencies and build
@@ -193,8 +231,13 @@ ${colors.bright}${colors.cyan}╔═══════════════�
     );
   }
 
+  const collectorExePath = path.join(config.distDir, 'gamemechanic-collector.exe');
+
+  // Build command with conditional icon flag
+  const collectorBuildCommand = `${config.bunPath} build --compile --target=bun-windows-x64 --minify --sourcemap ${iconFlag} --external typescript --external fluent-ffmpeg --external pdf-parse ./index.js --outfile ${collectorExePath}`.replace(/\s+/g, ' ').trim();
+
   const collectorBuildSuccess = runCommand(
-    `${config.bunPath} build --compile --target=bun-windows-x64 --minify --sourcemap --external typescript --external fluent-ffmpeg --external pdf-parse ./index.js --outfile ${path.join(config.distDir, 'gamemechanic-collector.exe')}`,
+    collectorBuildCommand,
     config.collectorDir,
     'Compiling collector to Windows EXE'
   );
@@ -202,6 +245,13 @@ ${colors.bright}${colors.cyan}╔═══════════════�
   if (!collectorBuildSuccess) {
     log.error('Collector build failed. Aborting.');
     process.exit(1);
+  }
+
+  // Note: Icon embedding status
+  if (isWindows()) {
+    log.success('Icon embedded via --windows-icon flag');
+  } else {
+    log.warning('Icon embedding skipped (only available when building on Windows)');
   }
 
   // Copy external collector dependencies to dist/node_modules
