@@ -17,7 +17,7 @@ async function eagerLoadContextWindows() {
     case "lmstudio":
       const { LMStudioLLM } = require("../AiProviders/lmStudio");
       await LMStudioLLM.cacheContextWindows(true);
-      log("LMStudio");
+      log("Game Mechanic Studio");
       break;
     case "ollama":
       const { OllamaAILLM } = require("../AiProviders/ollama");

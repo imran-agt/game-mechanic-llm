@@ -322,14 +322,14 @@ async function getLMStudioModels(basePath = null) {
       .list()
       .then((results) => results.data)
       .catch((e) => {
-        console.error(`LMStudio:listModels`, e.message);
+        console.error(`Game Mechanic Studio:listModels`, e.message);
         return [];
       });
 
     return { models, error: null };
   } catch (e) {
-    console.error(`LMStudio:getLMStudioModels`, e.message);
-    return { models: [], error: "Could not fetch LMStudio Models" };
+    console.error(`Game Mechanic Studio:getLMStudioModels`, e.message);
+    return { models: [], error: "Could not fetch Game Mechanic Studio Models" };
   }
 }
 

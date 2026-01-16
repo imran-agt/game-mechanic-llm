@@ -2,6 +2,7 @@ import useGetProviderModels, {
   DISABLED_PROVIDERS,
 } from "@/hooks/useGetProvidersModels";
 import { useTranslation } from "react-i18next";
+import { WORKSPACE_LLM_PROVIDERS } from "../utils";
 
 export default function ChatModelSelection({
   provider,
@@ -14,13 +15,17 @@ export default function ChatModelSelection({
   const { t } = useTranslation();
   if (DISABLED_PROVIDERS.includes(provider)) return null;
 
+  // Get the display name for the provider, falling back to the raw value
+  const providerDisplayName =
+    WORKSPACE_LLM_PROVIDERS.find((p) => p.value === provider)?.name ?? provider;
+
   if (loading) {
     return (
       <div>
         <div className="flex flex-col">
           <label htmlFor="name" className="block input-label">
             {t("chat_window.workspace_llm_manager.available_models", {
-              provider,
+              provider: providerDisplayName,
             })}
           </label>
           <p className="text-white text-opacity-60 text-xs font-medium py-1.5">
@@ -47,7 +52,7 @@ export default function ChatModelSelection({
       <div className="flex flex-col">
         <label htmlFor="name" className="block input-label">
           {t("chat_window.workspace_llm_manager.available_models", {
-            provider,
+            provider: providerDisplayName,
           })}
         </label>
         <p className="text-white text-opacity-60 text-xs font-medium py-1.5">

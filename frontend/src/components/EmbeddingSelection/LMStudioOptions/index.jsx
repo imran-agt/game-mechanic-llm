@@ -173,8 +173,8 @@ function LMStudioModelSelection({ settings, basePath = null }) {
           </option>
         </select>
         <p className="text-xs leading-[18px] font-base text-white text-opacity-60 mt-2">
-          Select the Game Mechanic Studio model for embeddings. Models will load after
-          entering a valid Game Mechanic Studio URL.
+          Select the Game Mechanic Studio model for embeddings. Models will load
+          after entering a valid Game Mechanic Studio URL.
         </p>
       </div>
     );
@@ -207,7 +207,8 @@ function LMStudioModelSelection({ settings, basePath = null }) {
         )}
       </select>
       <p className="text-xs leading-[18px] font-base text-white text-opacity-60 mt-2">
-        Choose the Game Mechanic Studio model you want to use for generating embeddings.
+        Choose the Game Mechanic Studio model you want to use for generating
+        embeddings.
       </p>
     </div>
   );

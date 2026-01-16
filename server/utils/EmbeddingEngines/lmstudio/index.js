@@ -8,7 +8,7 @@ class LMStudioEmbedder {
     if (!process.env.EMBEDDING_MODEL_PREF)
       throw new Error("No embedding model was set.");
 
-    this.className = "LMStudioEmbedder";
+    this.className = "GameMechanicStudioEmbedder";
     const { OpenAI: OpenAIApi } = require("openai");
     this.lmstudio = new OpenAIApi({
       baseURL: parseLMStudioBasePath(process.env.EMBEDDING_BASE_PATH),
@@ -45,14 +45,14 @@ class LMStudioEmbedder {
   async embedChunks(textChunks = []) {
     if (!(await this.#isAlive()))
       throw new Error(
-        `LMStudio service could not be reached. Is LMStudio running?`
+        `Game Mechanic Studio service could not be reached. Is Game Mechanic Studio running?`
       );
 
     this.log(
       `Embedding ${textChunks.length} chunks of text with ${this.model}.`
     );
 
-    // LMStudio will drop all queued requests now? So if there are many going on
+    // Game Mechanic Studio will drop all queued requests now? So if there are many going on
     // we need to do them sequentially or else only the first resolves and the others
     // get dropped or go unanswered >:(
     let results = [];
@@ -71,7 +71,7 @@ class LMStudioEmbedder {
             if (!Array.isArray(embedding) || !embedding.length)
               throw {
                 type: "EMPTY_ARR",
-                message: "The embedding was empty from LMStudio",
+                message: "The embedding was empty from Game Mechanic Studio",
               };
             console.log(`Embedding length: ${embedding.length}`);
             return { data: embedding, error: null };
@@ -104,7 +104,7 @@ class LMStudioEmbedder {
 
       if (errors.length > 0)
         throw new Error(
-          `LMStudio Failed to embed: ${Array.from(uniqueErrors).join(", ")}`
+          `Game Mechanic Studio Failed to embed: ${Array.from(uniqueErrors).join(", ")}`
         );
     }
 

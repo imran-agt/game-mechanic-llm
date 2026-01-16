@@ -88,9 +88,9 @@ export const LLM_SELECTION_PRIVACY = {
     logo: NvidiaNimLogo,
   },
   lmstudio: {
-    name: "LMStudio",
+    name: "Game Mechanic Studio",
     description: [
-      "Your model and chats are only accessible on the server running LMStudio",
+      "Your model and chats are only accessible on the server running Game Mechanic Studio",
     ],
     logo: LMStudioLogo,
   },
@@ -387,9 +387,9 @@ export const EMBEDDING_ENGINE_PRIVACY = {
     logo: OllamaLogo,
   },
   lmstudio: {
-    name: "LMStudio",
+    name: "Game Mechanic Studio",
     description: [
-      "Your document text is embedded privately on the server running LMStudio",
+      "Your document text is embedded privately on the server running Game Mechanic Studio",
     ],
     logo: LMStudioLogo,
   },

@@ -8,22 +8,22 @@ const {
 } = require("../../helpers/chat/LLMPerformanceMonitor");
 const { OpenAI: OpenAIApi } = require("openai");
 
-//  hybrid of openAi LLM chat completion for LMStudio
+//  hybrid of openAi LLM chat completion for Game Mechanic Studio
 class LMStudioLLM {
   /** @see LMStudioLLM.cacheContextWindows */
   static modelContextWindows = {};
 
   constructor(embedder = null, modelPreference = null) {
     if (!process.env.LMSTUDIO_BASE_PATH)
-      throw new Error("No LMStudio API Base Path was set.");
+      throw new Error("No Game Mechanic Studio API Base Path was set.");
 
     this.lmstudio = new OpenAIApi({
-      baseURL: parseLMStudioBasePath(process.env.LMSTUDIO_BASE_PATH), // here is the URL to your LMStudio instance
+      baseURL: parseLMStudioBasePath(process.env.LMSTUDIO_BASE_PATH), // here is the URL to your Game Mechanic Studio instance
       apiKey: null,
     });
 
-    // Prior to LMStudio 0.2.17 the `model` param was not required and you could pass anything
-    // into that field and it would work. On 0.2.17 LMStudio introduced multi-model chat
+    // Prior to Game Mechanic Studio 0.2.17 the `model` param was not required and you could pass anything
+    // into that field and it would work. On 0.2.17 Game Mechanic Studio introduced multi-model chat
     // which now has a bug that reports the server model id as "Loaded from Chat UI"
     // and any other value will crash inferencing. So until this is patched we will
     // try to fetch the `/models` and have the user set it, or just fallback to "Loaded from Chat UI"
@@ -49,15 +49,15 @@ class LMStudioLLM {
   }
 
   #log(text, ...args) {
-    console.log(`\x1b[32m[LMStudio]\x1b[0m ${text}`, ...args);
+    console.log(`\x1b[32m[Game Mechanic Studio]\x1b[0m ${text}`, ...args);
   }
 
   static #slog(text, ...args) {
-    console.log(`\x1b[32m[LMStudio]\x1b[0m ${text}`, ...args);
+    console.log(`\x1b[32m[Game Mechanic Studio]\x1b[0m ${text}`, ...args);
   }
 
   /**
-   * Cache the context windows for the LMStudio models.
+   * Cache the context windows for the Game Mechanic Studio models.
    * This is done once and then cached for the lifetime of the server. This is absolutely necessary to ensure that the context windows are correct.
    *
    * This is a convenience to ensure that the context windows are correct and that the user
@@ -76,7 +76,7 @@ class LMStudioLLM {
       await fetch(endpoint.toString())
         .then((res) => {
           if (!res.ok)
-            throw new Error(`LMStudio:cacheContextWindows - ${res.statusText}`);
+            throw new Error(`Game Mechanic Studio:cacheContextWindows - ${res.statusText}`);
           return res.json();
         })
         .then(({ data: models }) => {
@@ -138,7 +138,7 @@ class LMStudioLLM {
   }
 
   async isValidChatCompletionModel(_ = "") {
-    // LMStudio may be anything. The user must do it correctly.
+    // Game Mechanic Studio may be anything. The user must do it correctly.
     // See comment about this.model declaration in constructor
     return true;
   }
@@ -195,7 +195,7 @@ class LMStudioLLM {
   async getChatCompletion(messages = null, { temperature = 0.7 }) {
     if (!this.model)
       throw new Error(
-        `LMStudio chat: ${this.model} is not valid or defined model for chat completion!`
+        `Game Mechanic Studio chat: ${this.model} is not valid or defined model for chat completion!`
       );
 
     const result = await LLMPerformanceMonitor.measureAsyncFunction(
@@ -227,7 +227,7 @@ class LMStudioLLM {
   async streamGetChatCompletion(messages = null, { temperature = 0.7 }) {
     if (!this.model)
       throw new Error(
-        `LMStudio chat: ${this.model} is not valid or defined model for chat completion!`
+        `Game Mechanic Studio chat: ${this.model} is not valid or defined model for chat completion!`
       );
 
     const measuredStreamRequest = await LLMPerformanceMonitor.measureStream(
@@ -262,7 +262,7 @@ class LMStudioLLM {
 }
 
 /**
- * Parse the base path for the LMStudio API. Since the base path must end in /v1 and cannot have a trailing slash,
+ * Parse the base path for the Game Mechanic Studio API. Since the base path must end in /v1 and cannot have a trailing slash,
  * and the user can possibly set it to anything and likely incorrectly due to pasting behaviors, we need to ensure it is in the correct format.
  * @param {string} basePath
  * @returns {string}
