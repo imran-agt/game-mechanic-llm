@@ -110,7 +110,8 @@ export default function SettingsSidebar() {
                   <div className="flex flex-col gap-y-4 pb-[60px] overflow-y-scroll no-scroll">
                     <SidebarOptions user={user} t={t} />
                     <div className="h-[1.5px] bg-[#3D4147] mx-3 mt-[14px]" />
-                    <SupportEmail />
+                    {/* HIDDEN: Contact Support - uncomment to restore */}
+                    {/* <SupportEmail /> */}
                     <Link
                       hidden={
                         user?.hasOwnProperty("role") && user.role !== "admin"
@@ -161,7 +162,8 @@ export default function SettingsSidebar() {
                 <div className="flex flex-col gap-y-2 pb-[60px] overflow-y-scroll no-scroll">
                   <SidebarOptions user={user} t={t} />
                   <div className="h-[1.5px] bg-[#3D4147] mx-3 mt-[14px]" />
-                  <SupportEmail />
+                  {/* HIDDEN: Contact Support - uncomment to restore */}
+                  {/* <SupportEmail /> */}
                   <Link
                     hidden={
                       user?.hasOwnProperty("role") && user.role !== "admin"
