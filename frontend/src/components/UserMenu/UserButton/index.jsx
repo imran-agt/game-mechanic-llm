@@ -80,12 +80,12 @@ export default function UserButton() {
                 {t("profile_settings.account")}
               </button>
             )}
-            <a
+            {/* <a
               href={supportEmail}
               className="text-white hover:bg-theme-action-menu-item-hover w-full text-left px-4 py-1.5 rounded-md"
             >
               {t("profile_settings.support")}
-            </a>
+            </a> */}
             <button
               onClick={() => {
                 window.localStorage.removeItem(AUTH_USER);

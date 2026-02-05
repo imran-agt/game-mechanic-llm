@@ -27,7 +27,7 @@ export default function InterfaceSettings() {
             </p>
           </div>
           <ThemePreference />
-          <LanguagePreference />
+          {/* <LanguagePreference /> */}
           <MessageDirection />
         </div>
       </div>
