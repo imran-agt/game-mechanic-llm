@@ -1196,7 +1196,6 @@ function dumpENV() {
 
   const envFilename = getEnvFilename();
 
-  // Read existing .env file to preserve settings not in protectedKeys
   const envPath = path.join(basePath, envFilename);
   const existingEnvContent = {};
 
@@ -1360,7 +1359,6 @@ function dumpENV() {
   }
 
   fs.writeFileSync(envPath, envResult, { encoding: "utf8", flag: "w" });
-  console.log(`[dumpENV] Successfully wrote ${envFilename} with all settings preserved`);
   return true;
 }
 

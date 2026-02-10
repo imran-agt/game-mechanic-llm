@@ -1,4 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
+const { ensureDatabaseSetup } = require("./dbSetup");
 const path = require("path");
 const fs = require("fs");
 
@@ -16,41 +17,40 @@ try {
     errorFormat: "pretty",
   });
 
-  // Test connection and provide helpful error messages
-  prisma.$connect().catch((error) => {
-    console.error("\n❌ Failed to connect to database!");
-    console.error("Error:", error.message);
+  // Connect and ensure database schema exists (auto-initialize on first run)
+  prisma.$connect()
+    .then(() => ensureDatabaseSetup(prisma))
+    .catch((error) => {
+      console.error("\n[DB] Failed to connect to database!");
+      console.error("Error:", error.message);
 
-    if (error.message.includes("unable to open database file")) {
-      console.error("\n🔍 Troubleshooting:");
-      console.error("1. Check if DATABASE_URL is set correctly in .env file");
-      console.error("2. Ensure the database directory exists and has write permissions");
-      console.error("3. If using Windows, make sure the path is absolute (not relative)");
+      if (error.message.includes("unable to open database file")) {
+        console.error("\nTroubleshooting:");
+        console.error("1. Check if DATABASE_URL is set correctly in .env file");
+        console.error("2. Ensure the database directory exists and has write permissions");
+        console.error("3. If using Windows, make sure the path is absolute (not relative)");
 
-      const dbUrl = process.env.DATABASE_URL || "not set";
-      console.error(`\nCurrent DATABASE_URL: ${dbUrl}`);
+        const dbUrl = process.env.DATABASE_URL || "not set";
+        console.error(`\nCurrent DATABASE_URL: ${dbUrl}`);
 
-      if (dbUrl.startsWith("file:")) {
-        const dbPath = dbUrl.substring(5);
-        const dbDir = path.dirname(dbPath);
-        console.error(`\nDatabase directory: ${dbDir}`);
-        console.error(`Directory exists: ${fs.existsSync(dbDir)}`);
+        if (dbUrl.startsWith("file:")) {
+          const dbPath = dbUrl.substring(5);
+          const dbDir = path.dirname(dbPath);
+          console.error(`\nDatabase directory: ${dbDir}`);
+          console.error(`Directory exists: ${fs.existsSync(dbDir)}`);
 
-        if (fs.existsSync(dbDir)) {
-          console.error(`Directory is writable: ${fs.accessSync(dbDir, fs.constants.W_OK) === undefined}`);
+          if (fs.existsSync(dbDir)) {
+            console.error(`Directory is writable: ${fs.accessSync(dbDir, fs.constants.W_OK) === undefined}`);
+          }
         }
+
+        console.error("\nSolution: Run setup.bat to create a proper .env configuration");
       }
-
-      console.error("\n💡 Solution: Run setup.bat to create a proper .env configuration");
-    }
-
-    // Don't exit immediately - let the app try to continue
-    // Some routes might still work, and this gives better error visibility
-  });
+    });
 } catch (error) {
-  console.error("\n❌ Failed to initialize Prisma Client!");
+  console.error("\n[DB] Failed to initialize Prisma Client!");
   console.error("Error:", error.message);
-  console.error("\n💡 Solution: Run setup.bat to configure the database");
+  console.error("\nSolution: Run setup.bat to configure the database");
 
   // Create a minimal prisma object to prevent crashes
   prisma = {

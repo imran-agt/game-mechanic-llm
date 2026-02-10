@@ -34,35 +34,19 @@ if (isCompiled) {
   console.log('[Config] Pre-set NODE_ENV to production for compiled executable');
 }
 
-// Set a flag to prevent other modules from calling dotenv.config() again
-// Many modules have dotenv.config() calls at their top level which interfere with our setup
-process.env.DOTENV_CONFIGURED = 'true';
-
 // Load environment variables from the correct location
-// Since NODE_ENV is already set above for compiled exes, dotenv won't override it
 if (process.env.NODE_ENV === "development") {
   require("dotenv").config({ path: path.join(basePath, `.env.${process.env.NODE_ENV}`) });
 } else {
-  // In production/compiled mode, look for .env in the executable's directory
   const envPath = path.join(basePath, '.env');
   if (fs.existsSync(envPath)) {
     require("dotenv").config({ path: envPath });
-    console.log('[Config] Loaded .env from:', envPath);
-  } else {
-    // If no .env found, try to use default DATABASE_URL for SQLite
-    if (!process.env.DATABASE_URL) {
-      const defaultDbPath = path.join(basePath, 'storage', 'gamemechanic-llm.db');
-      process.env.DATABASE_URL = `file:${defaultDbPath}`;
-      console.log(`[Config] No .env found, using default DATABASE_URL: ${process.env.DATABASE_URL}`);
-    }
   }
 }
 
 // Verify NODE_ENV is still production for compiled executables
 if (isCompiled && process.env.NODE_ENV !== 'production') {
-  console.error('[Config] ERROR: NODE_ENV was changed to', process.env.NODE_ENV, 'after .env loading!');
   process.env.NODE_ENV = 'production';
-  console.log('[Config] Force-corrected NODE_ENV back to production');
 }
 
 // Fix DATABASE_URL if it's a relative path

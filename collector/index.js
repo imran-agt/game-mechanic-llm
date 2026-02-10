@@ -1,24 +1,35 @@
-process.env.NODE_ENV === "development"
-  ? require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` })
-  : require("dotenv").config();
+const path = require("path");
+const fs = require("fs");
+
+// Helper to determine base path for compiled executable or development
+const getBasePath = () => {
+  // Check if running as Bun compiled executable
+  const isCompiledExe = process.execPath.toLowerCase().includes('gamemechanic-collector.exe');
+  const isMalformedPath = process.platform === 'win32' &&
+                         __dirname.startsWith('\\') &&
+                         !__dirname.match(/^[A-Z]:\\/i);
+
+  if (isCompiledExe || isMalformedPath || !fs.existsSync(__dirname)) {
+    const exeDir = path.dirname(process.execPath);
+    return exeDir;
+  }
+  return __dirname;
+};
+
+const basePath = getBasePath();
+
+// Load environment variables from the correct location
+if (process.env.NODE_ENV === "development") {
+  require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
+} else {
+  const envPath = path.join(basePath, '.env');
+  require("dotenv").config({ path: envPath });
+}
 
 require("./utils/logger")();
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const path = require("path");
-
-// Helper to determine base path for compiled executable or development
-const getBasePath = () => {
-  // Check if running as Bun compiled executable
-  if (typeof Bun !== 'undefined' && Bun.main === import.meta.path) {
-    return path.dirname(process.execPath);
-  }
-  // Otherwise use __dirname for normal Node.js/Bun execution
-  return __dirname;
-};
-
-const basePath = getBasePath();
 const { ACCEPTED_MIMES, WATCH_DIRECTORY } = require("./utils/constants");
 const { reqBody } = require("./utils/http");
 const { processSingleFile } = require("./processSingleFile");

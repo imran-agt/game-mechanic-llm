@@ -326,9 +326,13 @@ export default function LLMPreference({
     const data = {};
     const formData = new FormData(form);
     data.LLMProvider = selectedLLM;
-    // Default to AnythingLLM embedder and LanceDB
-    data.EmbeddingEngine = "native";
-    data.VectorDB = "lancedb";
+    // Default to local Game Mechanic Studio embedder and QDrant vector DB
+    data.EmbeddingEngine = "lmstudio";
+    data.EmbeddingBasePath = "http://127.0.0.1:5000/v1";
+    data.EmbeddingModelPref = "Qwen3-Embedding-0.6B-Q8_0";
+    data.EmbeddingModelMaxChunkLength = "8192";
+    data.VectorDB = "qdrant";
+    data.QdrantEndpoint = "http://localhost:6333";
     for (var [key, value] of formData.entries()) data[key] = value;
 
     const { error } = await System.updateSystem(data);

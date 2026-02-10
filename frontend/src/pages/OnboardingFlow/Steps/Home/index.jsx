@@ -1,3 +1,4 @@
+import { useState } from "react";
 import paths from "@/utils/paths";
 import LGroupImg from "./l_group.png";
 import RGroupImg from "./r_group.png";
@@ -7,6 +8,7 @@ import AnythingLLMLogo from "@/media/logo/anything-llm.png";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@/hooks/useTheme";
 import { useTranslation } from "react-i18next";
+import System from "@/models/system";
 
 const IMG_SRCSET = {
   light: {
@@ -19,11 +21,40 @@ const IMG_SRCSET = {
   },
 };
 
+const DEFAULT_SETTINGS = {
+  LLMProvider: "lmstudio",
+  LMStudioBasePath: "http://localhost:5000/v1",
+  EmbeddingEngine: "lmstudio",
+  EmbeddingBasePath: "http://127.0.0.1:5000/v1",
+  EmbeddingModelPref: "Qwen3-Embedding-0.6B-Q8_0",
+  EmbeddingModelMaxChunkLength: "8192",
+  VectorDB: "qdrant",
+  QdrantEndpoint: "http://localhost:6333",
+};
+
 export default function OnboardingHome() {
   const navigate = useNavigate();
   const { theme } = useTheme();
   const { t } = useTranslation();
   const srcSet = IMG_SRCSET?.[theme] || IMG_SRCSET.default;
+  const [configuring, setConfiguring] = useState(false);
+
+  async function handleGetStarted() {
+    setConfiguring(true);
+    try {
+      const { newValues, error } =
+        await System.updateSystem(DEFAULT_SETTINGS);
+      if (newValues) {
+        navigate(paths.onboarding.createWorkspace());
+      } else {
+        console.error("Auto-setup failed:", error);
+        navigate(paths.onboarding.llmPreference());
+      }
+    } catch (e) {
+      console.error("Auto-setup error:", e);
+      navigate(paths.onboarding.llmPreference());
+    }
+  }
 
   return (
     <>
@@ -48,12 +79,21 @@ export default function OnboardingHome() {
               alt="AnythingLLM"
               className="md:h-[50px] flex-shrink-0 max-w-[300px] light:invert"
             />
-            <button
-              onClick={() => navigate(paths.onboarding.llmPreference())}
-              className="border-[2px] border-theme-text-primary animate-pulse light:animate-none w-full md:max-w-[350px] md:min-w-[300px] text-center py-3 bg-theme-button-primary hover:bg-theme-bg-secondary text-theme-text-primary font-semibold text-sm my-10 rounded-md "
-            >
-              {t("onboarding.home.getStarted")}
-            </button>
+            {configuring ? (
+              <div className="flex flex-col items-center my-10">
+                <div className="w-8 h-8 border-4 border-theme-text-primary border-t-transparent rounded-full animate-spin"></div>
+                <p className="text-theme-text-primary text-sm mt-4">
+                  Setting up defaults...
+                </p>
+              </div>
+            ) : (
+              <button
+                onClick={handleGetStarted}
+                className="border-[2px] border-theme-text-primary animate-pulse light:animate-none w-full md:max-w-[350px] md:min-w-[300px] text-center py-3 bg-theme-button-primary hover:bg-theme-bg-secondary text-theme-text-primary font-semibold text-sm my-10 rounded-md"
+              >
+                {t("onboarding.home.getStarted")}
+              </button>
+            )}
           </div>
         </div>
       </div>
